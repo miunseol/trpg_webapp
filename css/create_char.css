@@ -1,0 +1,478 @@
+/* ===== 캐릭터 생성 폼 기본 스타일 ===== */
+.create-form {
+    max-width: 800px;
+    margin: 0 auto 30px;
+    padding: 20px;
+    background: #2f3341;
+    border-radius: 8px;
+}
+
+.form-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #3d4150;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section h3 {
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+/* ===== 폼 레이아웃 ===== */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 0px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #e0e0e0;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-group label .required {
+    color: #f1c40f;
+    margin-left: 3px;
+}
+
+/* ===== 입력 필드 스타일 ===== */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    background: #1a1c23;
+    border: 1px solid #3d4150;
+    border-radius: 4px;
+    color: #e0e0e0;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+/* number input 증감 버튼 제거 */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* ===== 프로필 레이아웃 ===== */
+.profile-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.profile-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ===== 콤팩트 5칸 (성별/계제/공적점/마화/색상) ===== */
+.compact-row-5 {
+    display: grid;
+    grid-template-columns: 100px 60px 60px 60px 80px;
+    gap: 10px;
+}
+
+.compact-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.compact-field label {
+    font-size: 12px;
+    color: #e0e0e0;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.compact-field input,
+.compact-field select {
+    height: 34px;
+    padding: 8px;
+    background: #1a1c23;
+    border: 1px solid #3d4150;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #e0e0e0;
+    font-size: 13px;
+    width: 100%;
+}
+
+.compact-field input[type="number"] {
+    text-align: center;
+    font-weight: 600;
+    box-sizing: border-box;
+    padding: 2px 4px;
+}
+
+.compact-field input[type="color"] {
+    width: 34px;
+    height: 34px;
+    padding: 1px 1px 1px 2px;
+    background: #1a1c23;
+    border: 1px solid #3d4150;
+    border-radius: 4px;
+    align-content: center;
+    cursor: pointer;
+}
+
+.compact-field select {
+    cursor: pointer;
+}
+
+/* ===== 성별 직접입력 ===== */
+.gender-custom {
+    display: none;
+    margin-top: 5px;
+}
+
+.gender-custom input {
+    padding: 6px;
+    font-size: 12px;
+}
+
+/* ===== 전투 스탯 가로 배치 ===== */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-box label {
+    font-size: 12px;
+    color: #e0e0e0;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.stat-box input {
+    text-align: center;
+    padding: 10px;
+    background: #1a1c23;
+    border: 1px solid #3d4150;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #e0e0e0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* ===== 이미지 업로드 영역 ===== */
+.image-upload-area {
+    position: relative;
+    border: 2px dashed #3d4150;
+    border-radius: 8px;
+    background: #1a1c23;
+    cursor: pointer;
+    transition: all 0.3s;
+    overflow: hidden;
+}
+
+.image-upload-area.size-large {
+    width: 200px;
+    height: 200px;
+}
+
+.image-upload-area.size-medium {
+    width: 150px;
+    height: 150px;
+}
+
+.image-upload-area.size-small {
+    width: 120px;
+    height: 120px;
+}
+
+.image-upload-area:hover {
+    border-color: #667eea;
+    background: #252833;
+}
+
+.image-upload-area.drag-over {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
+
+.upload-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.size-small .upload-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.upload-placeholder p {
+    margin: 3px 0;
+    color: #e0e0e0;
+    font-size: 13px;
+}
+
+.size-small .upload-placeholder p {
+    font-size: 11px;
+}
+
+.upload-placeholder small {
+    color: #888;
+    font-size: 11px;
+}
+
+.size-small .upload-placeholder small {
+    font-size: 9px;
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.remove-btn:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+}
+
+/* ===== 크롭 모달 ===== */
+.crop-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.crop-modal-content {
+    background: #252833;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.crop-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #3d4150;
+}
+
+.crop-modal-header h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+}
+
+.crop-close-btn {
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.crop-close-btn:hover {
+    color: #fff;
+}
+
+.crop-container {
+    flex: 1;
+    padding: 20px;
+    overflow: hidden;
+    max-height: 500px;
+}
+
+.crop-container img {
+    max-width: 100%;
+    display: block;
+}
+
+.crop-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid #3d4150;
+}
+
+.btn-cancel,
+.btn-crop-confirm {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cancel {
+    background: #3d4150;
+    color: #e0e0e0;
+}
+
+.btn-cancel:hover {
+    background: #4a5162;
+}
+
+.btn-crop-confirm {
+    background: #667eea;
+    color: white;
+}
+
+.btn-crop-confirm:hover {
+    background: #5568d3;
+}
+
+/* ===== 버튼 스타일 ===== */
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-submit:hover {
+    background: #5568d3;
+}
+
+/* ===== 특기 선택 안내 ===== */
+.skill-limit-notice {
+    text-align: center;
+    padding: 10px;
+    background: rgba(241, 196, 15, 0.1);
+    border-radius: 4px;
+    margin-bottom: 15px;
+    color: #f1c40f;
+}
+
+/* ===== 에러 메시지 ===== */
+.error-message {
+    color: #e74c3c;
+    margin-top: 10px;
+    display: none;
+}
+
+/* ===== 안내 텍스트 ===== */
+.info-text {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* ===== 조건부 필드 ===== */
+.conditional-field {
+    display: none;
+}
+
+.conditional-field.show {
+    display: block;
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 768px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-left {
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .compact-row-4 {
+        grid-template-columns: 1fr 1fr;
+    }
+}

@@ -1,0 +1,155 @@
+/* 전체 배경: 어두운 네이비 톤 */
+body {
+    background-color: #1a1c23;
+    color: #e0e0e0;
+    font-family: 'Pretendard', sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+/* 시트 컨테이너: 약간 더 밝은 배경으로 분리 */
+.sheet-container {
+    max-width: fit-content;
+    margin: 0 auto;
+    padding: 30px;
+    background: #252833;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    border: 1px solid #3d4150;
+}
+
+/* 시트 전체 또는 특정 영역의 텍스트 선택을 막습니다. */
+.sheet-container {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;     /* IE 10+ */
+    user-select: none;         /* Standard */
+}
+
+/* 헤더 부분 */
+.char-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #3d4150;
+}
+
+.char-header h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 24px;
+}
+
+/* 특기 테이블 레이아웃: 가로 정렬 핵심 */
+.grid-header, .grid-row {
+    display: flex;
+    flex-direction: row; /* 가로로 나열 */
+}
+
+/* 칸(Cell) 공통 설정 */
+.skill-cell, .gap-cell, .dice-num, .cat, .gap, .dice-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+
+/* 특기 칸은 마우스 커서를 기본 화살표나 포인터로 고정 */
+.skill-cell {
+    cursor: default;
+}
+
+/* 특기 칸: 어두운 배경에 테두리 강조 */
+.cat, .skill-cell {
+    width: 90px;
+    height: 42px;
+    margin: 1px; /* 칸 사이 미세한 간격 */
+    border: 1px solid #3d4150;
+    background: #2f3341;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* 습득한 특기: 마기로기 특유의 황금색 광채 */
+.skill-cell.owned {
+    background: #f1c40f;
+    color: #000;
+    font-weight: 700;
+    border-color: #f39c12;
+    box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+}
+
+/* 갭(Gap): 분야 사이 통로 느낌 */
+.gap, .gap-cell {
+    width: 8px;
+    background: #1a1c23;
+    margin: 1px 2px;
+}
+
+/* 주사위 번호(좌측) 및 분야명(상단) */
+.dice-label, .dice-num {
+    width: 45px;
+    background: #1a1c23;
+    color: #888;
+    font-size: 12px;
+}
+
+.grid-header .cat {
+    background: #3d4150;
+    color: #fff;
+    border: none;
+    font-weight: bold;
+}
+
+/* 호버 시 효과 */
+.skill-cell:hover:not(.owned) {
+    background: #3d4150;
+    border-color: #5d6275;
+}
+
+.diff-pop {
+    font-size: 10px;
+    color: #f1c40f;
+    background: rgba(0,0,0,0.6);
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 5px;
+    vertical-align: middle;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 전문 분야 헤더 스타일 */
+.cat.specialty {
+    background: #e74c3c !important; /* 강렬한 레드 또는 포인트 컬러 */
+    color: white;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.5);
+    border-radius: 4px 4px 0 0;
+}
+
+/* 전문 분야 열(Column) 하이라이트 효과 (선택 사항) */
+/* 해당 x좌표를 가진 셀들에 프로그래밍적으로 클래스를 주거나 CSS 선택자 활용 */
+.skill-cell.specialty-zone {
+    border-left: 2px solid rgba(231, 76, 60, 0.3);
+    border-right: 2px solid rgba(231, 76, 60, 0.3);
+}
+
+#mana-line {
+    stroke: #f1c40f;
+    stroke-width: 3;
+    fill: none;
+    filter: drop-shadow(0 0 8px #fff8b0) drop-shadow(0 0 16px #ffe066);
+    stroke-dasharray: 1000; /* 충분히 큰 값으로 전체 길이 */
+    stroke-dashoffset: 1000;
+    transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+#mana-line.active {
+    stroke-dashoffset: 0;
+}
