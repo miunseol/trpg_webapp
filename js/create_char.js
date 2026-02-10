@@ -4,13 +4,14 @@
  */
 
 let selectedSkills = [];
-let selectedStrong = null;
+let selectedSpecialty = null;
 const MAX_SKILLS = 6;
 const OUTSIDER_ARCHETYPE_ID = 5; // 이단자 경력 ID
 
 document.addEventListener('DOMContentLoaded', () => {
     initFormEvents();
     initSkillSelection();
+    initGenderCustomInput();
 });
 
 /**
@@ -21,17 +22,15 @@ function initFormEvents() {
     document.getElementById('gender').addEventListener('change', function() {
         const customInput = document.getElementById('gender-custom-input');
         if (this.value === 'custom') {
-            customInput.style.display = 'block';
+            customInput.classList.add('show')
         } else {
-            customInput.style.display = 'none';
+            customInput.classList.remove('show')
+            document.getElementById('gender_custom').value = '' ;
         }
     });
 
-    // 경력 선택 시 의무 표시 & 조건부 필드 토글
+    // 경력 선택 시 조건부 필드 토글
     document.getElementById('archetype_id').addEventListener('change', function() {
-        const selected = this.options[this.selectedIndex];
-        const duty = selected.getAttribute('data-duty');
-        document.getElementById('archetype-duty').textContent = duty ? `의무: ${duty}` : '';
         
         // 이단자 선택 시 종족 필드 표시 (선택사항)
         const archetypeId = parseInt(this.value);
@@ -49,16 +48,8 @@ function initFormEvents() {
         }
     });
 
-    // 종족 선택 시 의무 표시 & 작위 필드 토글
+    // 종족 선택 시 작위 필드 토글
     document.getElementById('ancestry_id').addEventListener('change', function() {
-        const selected = this.options[this.selectedIndex];
-        const duty = selected.getAttribute('data-duty');
-        
-        if (duty) {
-            document.getElementById('ancestry-duty').textContent = `의무: ${duty}`;
-        } else {
-            document.getElementById('ancestry-duty').textContent = '황혼선서 추가 룰';
-        }
         
         // 종족 선택 시에만 작위 필드 표시 (필수)
         const peerageSection = document.getElementById('peerage-section');
@@ -70,13 +61,6 @@ function initFormEvents() {
             document.getElementById('peerage_id').removeAttribute('required');
             document.getElementById('peerage_id').value = '';
         }
-    });
-
-    // 기관 선택 시 의무 표시
-    document.getElementById('organization_id').addEventListener('change', function() {
-        const selected = this.options[this.selectedIndex];
-        const duty = selected.getAttribute('data-duty');
-        document.getElementById('org-duty').textContent = duty ? `의무: ${duty}` : '';
     });
 }
 
@@ -119,6 +103,22 @@ function initSkillSelection() {
         });
     });
 }
+
+function initGenderCustomInput() {
+    const genderSelect = document.getElementById('gender');
+    const genderCustom = document.getElementById('gender_custom');
+    function updateGenderCustom() {
+        if (genderSelect.value === 'custom') {
+            genderCustom.style.opacity = 1;
+            genderCustom.style.pointerEvents = 'auto';
+        } else {
+            genderCustom.style.opacity = 0;
+            genderCustom.style.pointerEvents = 'none';
+        }
+    }
+    genderSelect.addEventListener('change', updateGenderCustom);
+    updateGenderCustom();
+};
 
 /**
  * 특기 카운트 업데이트
@@ -164,7 +164,7 @@ function validateAndSubmit() {
     }
 
     if (gender === 'custom') {
-        const customGender = document.querySelector('input[name="gender_custom"]').value.trim();
+        const customGender = document.getElementById('gender_custom').value.trim();
         if (!customGender) {
             showError('성별을 직접 입력해주세요.');
             return;

@@ -1,0 +1,41 @@
+SHOW FULL COLUMNS FROM character_sheets;
+
+
+
+id	int(11)	NULL	NO	PRI	NULL	auto_increment	select,insert,update,references		
+name	varchar(100)	utf8mb4_general_ci	NO		NULL		select,insert,update,references		
+rule_system	varchar(50)	utf8mb4_general_ci	NO		MagicaLogia		select,insert,update,references		
+strong_field	int(11)	NULL	NO		1		select,insert,update,references	전문 분야 (1~6)	
+skills	text	utf8mb4_general_ci	YES		NULL		select,insert,update,references	JSON 배열	
+magic_power_current	int(11)	NULL	NO		4		select,insert,update,references	현재 마력	
+magic_power_max	int(11)	NULL	NO		4		select,insert,update,references	최대 마력	
+temp_magic_power	int(11)	NULL	NO		0		select,insert,update,references	임시 마력	
+memo	text	utf8mb4_general_ci	YES		NULL		select,insert,update,references		
+created_at	timestamp	NULL	NO		current_timestamp()		select,insert,update,references		
+magic_name	varchar(100)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	마법명	
+transient_name	varchar(100)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	임시 이름 (transient name)	
+age	varchar(50)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	나이	
+gender	varchar(20)	utf8mb4_general_ci	NO		남		select,insert,update,references	성별. 남/여/중성/양성/불명/...	
+alias_identity	varchar(100)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	사회적 신분	
+backstory	text	utf8mb4_general_ci	YES		NULL		select,insert,update,references	백스토리	
+user_color	varchar(20)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	사용자 색상 (#RGB)	
+duty	text	utf8mb4_general_ci	YES		NULL		select,insert,update,references	의무 (경력+기관 기반 자동)	
+special_conditions	text	utf8mb4_general_ci	YES		NULL		select,insert,update,references	특기사항 (경력+기관 기반 자동)	
+image_url	varchar(500)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	캐릭터 이미지	
+true_form_image	varchar(500)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	진정한 모습 이미지	
+library_image	varchar(500)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	장서 이미지	
+sovereignty_image	varchar(500)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	주권 이미지	
+sovereignty_bgm	varchar(500)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	주권 BGM	
+tier	int(11)	NULL	NO		1		select,insert,update,references	계제 0~7	
+archetype_id	int(11)	NULL	YES		NULL		select,insert,update,references	아키타입 ID (1~6)	
+ancestry_id	int(11)	NULL	YES		NULL		select,insert,update,references	종족 ID (이단자 전용)	
+peerage_id	int(11)	NULL	YES		NULL		select,insert,update,references	작위 ID (종족 전용)	
+organ_id	int(11)	NULL	YES		NULL		select,insert,update,references	소속 기관 ID (1~6, NULL=무소속)	
+attack_point	int(11)	NULL	NO		0		select,insert,update,references	공격력 0~7	
+defense_point	int(11)	NULL	NO		0		select,insert,update,references	방어력 0~7	
+principal_point	int(11)	NULL	NO		0		select,insert,update,references	근원력 0~7	
+grade_points	int(11)	NULL	NO		0		select,insert,update,references	공적점	
+mana_currency	int(11)	NULL	NO		0		select,insert,update,references	마화 (마법 화폐)	
+true_form_name	varchar(100)	utf8mb4_general_ci	YES		NULL		select,insert,update,references	진정한 모습 이름	
+true_form_effect	text	utf8mb4_general_ci	YES		NULL		select,insert,update,references	진정한 모습 효과	
+updated_at	timestamp	NULL	NO		current_timestamp()	on update current_timestamp()	select,insert,update,references		

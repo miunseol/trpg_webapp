@@ -1,6 +1,7 @@
 # DB 비밀번호 등 민감정보
 config.php
 .env
+/mysql
 
 # XAMPP 임시 파일
 *.log

@@ -62,9 +62,9 @@ while($row = mysqli_fetch_assoc($master_result)) {
                 $categories = ["별", "짐승", "힘", "노래", "꿈", "어둠"];
                 foreach ($categories as $index => $cat_name) {
                     $field_id = $index + 1;
-                    // DB에 저장된 전문 분야와 일치하면 'specialty' 클래스 부여
-                    $is_specialty = ($char['specialty_field'] == $field_id) ? "specialty" : "";
-                    echo "<div class='cat $is_specialty' data-field='$field_id'>$cat_name</div>";
+                    // DB에 저장된 전문 분야와 일치하면 'strong' 클래스 부여
+                    $is_strong = ($char['strong_field'] == $field_id) ? "strong" : "";
+                    echo "<div class='cat $is_strong' data-field='$field_id'>$cat_name</div>";
                     if ($index < 5) echo "<div class='gap'></div>";
                 }
                 ?>
@@ -101,7 +101,7 @@ while($row = mysqli_fetch_assoc($master_result)) {
         // PHP 데이터를 JS 객체로 변환하여 저장
         const SHEET_CONFIG = {
             charId: <?php echo $char_id; ?>,
-            initialSpecialty: <?php echo $char['specialty_field']; ?>,
+            initialstrong: <?php echo $char['strong_field']; ?>,
             initialSkills: <?php echo json_encode($my_skills); ?>
         };
     </script>

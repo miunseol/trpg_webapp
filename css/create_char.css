@@ -91,7 +91,7 @@ input[type="number"] {
 /* ===== 프로필 레이아웃 ===== */
 .profile-layout {
     display: grid;
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 250px 1fr;
     gap: 25px;
     margin-bottom: 20px;
 }
@@ -99,19 +99,20 @@ input[type="number"] {
 .profile-left {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    justify-content: space-between;
+    gap: 20px;
 }
 
 .profile-right {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 12px;
 }
 
 /* ===== 콤팩트 5칸 (성별/계제/공적점/마화/색상) ===== */
 .compact-row-5 {
-    display: grid;
-    grid-template-columns: 100px 60px 60px 60px 80px;
+    display: flex;
     gap: 10px;
 }
 
@@ -150,7 +151,7 @@ input[type="number"] {
 .compact-field input[type="color"] {
     width: 34px;
     height: 34px;
-    padding: 1px 1px 1px 2px;
+    padding: 2px;
     background: #1a1c23;
     border: 1px solid #3d4150;
     border-radius: 4px;
@@ -162,22 +163,13 @@ input[type="number"] {
     cursor: pointer;
 }
 
-/* ===== 성별 직접입력 ===== */
-.gender-custom {
-    display: none;
-    margin-top: 5px;
-}
-
-.gender-custom input {
-    padding: 6px;
-    font-size: 12px;
-}
-
 /* ===== 전투 스탯 가로 배치 ===== */
 .stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .stat-box {
@@ -216,8 +208,8 @@ input[type="number"] {
 }
 
 .image-upload-area.size-large {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
 }
 
 .image-upload-area.size-medium {
@@ -458,7 +450,16 @@ input[type="number"] {
 }
 
 .conditional-field.show {
-    display: block;
+    display: grid;
+}
+
+/* 조건부 필드 절대 위치 (경력/기관 위의 공간 활용) */
+#ancestry-section {
+    position: absolute;
+    top: -85px;
+    left: 0;
+    right: 0;
+    z-index: 5;
 }
 
 /* ===== 반응형 ===== */

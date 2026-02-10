@@ -72,7 +72,6 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                     <div class="profile-layout">
                         <!-- 왼쪽: 캐릭터 이미지 & 장서 이미지 -->
                         <div class="profile-left">
-                            <!-- 캐릭터 이미지 -->
                             <div class="form-group">
                                 <label>캐릭터 이미지</label>
                                 <div class="image-upload-area size-large" data-target="image_url">
@@ -86,8 +85,6 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 </div>
                                 <input type="hidden" name="image_url" id="image_url">
                             </div>
-                            
-                            <!-- 장서 이미지 -->
                             <div class="form-group">
                                 <label>장서 이미지</label>
                                 <div class="image-upload-area size-large" data-target="library_image">
@@ -117,8 +114,9 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 </div>
                             </div>
                             
-                            <!-- 성별 / 계제 / 공적점 / 마화 -->
+                            <!-- 성별 / 나이 / 키 / 색상 -->
                             <div class="compact-row-5">
+                                <!-- 성별 -->
                                 <div class="compact-field">
                                     <label>성별<span class="required">*</span></label>
                                     <select name="gender" id="gender" required>
@@ -127,24 +125,24 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                         <option value="여">여</option>
                                         <option value="무성">무성</option>
                                         <option value="양성">양성</option>
-                                        <option value="custom">입력</option>
+                                        <option value="custom">직접 입력</option>
                                     </select>
-                                    <div class="gender-custom" id="gender-custom-input">
-                                        <input type="text" name="gender_custom" placeholder="성별">
-                                    </div>
                                 </div>
+                                <div class="compact-field" id="gender-custom-input">
+                                    <label><span class="required" style="opacity:0;">*</span></label>           
+                                    <input type="text" name="gender_custom" id="gender_custom" style="width: 80px; opacity:0; pointer-events:none; transition:opacity 0.3s;" placeholder="성별">
+                                </div>
+                                <!-- 나이 -->
                                 <div class="compact-field">
-                                    <label>계제<span class="required">*</span></label>
-                                    <input type="number" name="tier" id="tier" min="0" max="7" value="3" required>
+                                    <label>나이</label>
+                                    <input type="text" name="age" id="age" style="width: 200px" placeholder="예: 외견상 20대지만 사실 300살">
                                 </div>
+                                <!-- 키 -->
                                 <div class="compact-field">
-                                    <label>공적점</label>
-                                    <input type="number" name="grade_points" id="grade_points" min="0" value="0">
+                                    <label>키</label>
+                                    <input type="text" name="height" id="height" style="width: 80px">
                                 </div>
-                                <div class="compact-field">
-                                    <label>마화</label>
-                                    <input type="number" name="mana_currency" id="mana_currency" min="0" value="0">
-                                </div>
+                                <!-- 캐릭터 퍼스널 컬러 -->
                                 <div class="compact-field">
                                     <label>색상</label>
                                     <input type="color" name="character_color" id="character_color" value="#667eea">
@@ -153,10 +151,6 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
 
                             <!-- 나이 / 캐릭터 색상 -->
                             <div class="form-row">
-                                <div class="form-group">
-                                    <label>나이</label>
-                                    <input type="text" name="age" id="age" placeholder="예: 외견상 20대지만 사실 300살.">
-                                </div>
                                 <div class="form-group">
                                     <label>사회적 신분</label>
                                     <input type="text" name="alias_identity" id="alias_identity" placeholder="경찰 / 대학생">
@@ -170,8 +164,7 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                     <select name="archetype_id" id="archetype_id" required>
                                         <option value="">선택하세요</option>
                                         <?php foreach($archetypes as $career): ?>
-                                            <option value="<?php echo $career['id']; ?>" 
-                                                    data-duty="<?php echo htmlspecialchars($career['duty']); ?>">
+                                            <option value="<?php echo $career['id']; ?>">
                                                 <?php echo $career['name_kr']; ?> (<?php echo $career['name_ruby']; ?>)
                                             </option>
                                         <?php endforeach; ?>
@@ -183,8 +176,7 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                     <select name="organ_id" id="organ_id">
                                         <option value="">무소속</option>
                                         <?php foreach($organizations as $org): ?>
-                                            <option value="<?php echo $org['id']; ?>"
-                                                    data-duty="<?php echo htmlspecialchars($org['duty']); ?>">
+                                            <option value="<?php echo $org['id']; ?>">
                                                 <?php echo $org['name_kr']; ?> (<?php echo $org['name_ruby']; ?>)
                                             </option>
                                         <?php endforeach; ?>
@@ -193,22 +185,84 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 </div>
                             </div>
 
-                            <!-- 전투 스탯 -->
-                            <div class="stats-row">
-                                <div class="stat-box">
+                            <!-- 조건부: 이단자 선택 시 종족 (선택) -->
+                            <div class="form-row" id="ancestry-peerage-row">
+                                <div class="form-group">
+                                    <label>종족 (이단자 전용 - 선택)</label>
+                                    <select name="ancestry_id" id="ancestry_id">
+                                        <option value="">이종족 사용 안 함</option>
+                                        <?php foreach($ancestries as $ancestry): ?>
+                                            <option value="<?php echo $ancestry['id']; ?>"
+                                                    data-duty="<?php echo htmlspecialchars($ancestry['duty']); ?>">
+                                                <?php echo $ancestry['name_kr']; ?> (<?php echo $ancestry['name_ruby']; ?>)
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <p class="info-text" id="peerage-duty">황혼선서 추가 룰</p>
+                                </div>
+
+                                <div class="form-group" id="peerage-section">
+                                    <label>작위 (이종족 전용)<span class="required">*</span></label>
+                                    <select name="peerage_id" id="peerage_id">
+                                        <option value="">선택하세요</option>
+                                        <?php foreach($peerages as $peerage): ?>
+                                            <option value="<?php echo $peerage['id']; ?>">
+                                                <?php echo $peerage['title_name']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <p class="info-text">종족의 위계를 나타냅니다.</p>
+                                </div>
+                            </div>
+                            <script>
+                            // 경력 선택에 따라 종족/작위 활성화
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const archetypeSelect = document.getElementById('archetype_id');
+                                const ancestrySelect = document.getElementById('ancestry_id');
+                                const peerageSelect = document.getElementById('peerage_id');
+                                function updateAncestryPeerage() {
+                                    const isOutsider = archetypeSelect.value == '5';
+                                    ancestrySelect.disabled = !isOutsider;
+                                    peerageSelect.disabled = !isOutsider;
+                                    ancestrySelect.parentElement.style.opacity = isOutsider ? 1 : 0.5;
+                                    peerageSelect.parentElement.style.opacity = isOutsider ? 1 : 0.5;
+                                }
+                                archetypeSelect.addEventListener('change', updateAncestryPeerage);
+                                updateAncestryPeerage();
+                            });
+                            </script>
+
+                            <!-- 스테이터스 -->
+                            <div class="compact-row-5">
+                                <div class="compact-field">
+                                    <label>공적점</label>
+                                    <input type="number" name="grade_points" id="grade_points" min="0" value="0">
+                                </div>
+                                <div class="compact-field">
+                                    <label>마화</label>
+                                    <input type="number" name="mana_currency" id="mana_currency" min="0" value="0">
+                                </div>
+                            </div>
+                            <div class="compact-row-5">
+                                <div class="compact-field">
+                                    <label>계제<span class="required">*</span></label>
+                                    <input type="number" name="tier" id="tier" min="0" max="7" value="3" required>
+                                </div>
+
+                                <div class="compact-field">
                                     <label>공격력<span class="required">*</span></label>
                                     <input type="number" name="attack_point" id="attack_point" min="0" max="7" value="0" required>
                                 </div>
-                                <div class="stat-box">
+                                <div class="compact-field">
                                     <label>방어력<span class="required">*</span></label>
                                     <input type="number" name="defense_point" id="defense_point" min="0" max="7" value="0" required>
                                 </div>
-                                <div class="stat-box">
+                                <div class="compact-field">
                                     <label>근원력<span class="required">*</span></label>
                                     <input type="number" name="principal_point" id="principal_point" min="0" max="7" value="0" required>
                                 </div>
+
                             </div>
-                            <p class="info-text">💡 기관에 따라 특정 스탯이 가장 높아야 하는 조건이 있을 수 있습니다.</p>
                         </div>
                     </div>
 
@@ -216,42 +270,6 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                     <div class="form-group full-width">
                         <label>메모 (선택)</label>
                         <textarea name="memo" id="memo" placeholder="캐릭터에 대한 메모를 입력하세요"></textarea>
-                    </div>
-                </div>
-
-                <!-- 경력 & 소속 섹션 -->
-                <div class="form-section">
-                    <h3>🎭 경력 & 소속</h3>
-                    
-                    <!-- 조건부: 이단자 선택 시 종족 (선택) -->
-                    <div class="form-row conditional-field" id="race-section">
-                        <div class="form-group">
-                            <label>종족 (이단자 전용 - 선택)</label>
-                            <select name="ancestry_id" id="ancestry_id">
-                                <option value="">이종족 사용 안 함</option>
-                                <?php foreach($races as $race): ?>
-                                    <option value="<?php echo $race['id']; ?>"
-                                            data-duty="<?php echo htmlspecialchars($race['duty']); ?>">
-                                        <?php echo $race['name_kr']; ?> (<?php echo $race['name_ruby']; ?>)
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                            <p class="info-text" id="race-duty">황혼선서 추가 룰</p>
-                        </div>
-
-                        <!-- 조건부: 종족 선택 시 작위 (필수) -->
-                        <div class="form-group conditional-field" id="title-section">
-                            <label>작위 (이종족 전용)<span class="required">*</span></label>
-                            <select name="peerage_id" id="peerage_id">
-                                <option value="">선택하세요</option>
-                                <?php foreach($peerages as $title): ?>
-                                    <option value="<?php echo $title['id']; ?>">
-                                        <?php echo $title['title_name']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                            <p class="info-text">종족의 위계를 나타냅니다.</p>
-                        </div>
                     </div>
                 </div>
 
@@ -312,7 +330,7 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                     </div>
                 </div>
 
-                <input type="hidden" name="strong_field" id="strong_field" value="">
+                <input type="hidden" name="specialty_field" id="specialty_field" value="">
                 <input type="hidden" name="skills" id="skills" value="[]">
             </form>
         </div>
@@ -369,7 +387,24 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
         </div>
     </div>
 
-    <script src="image-upload.js"></script>
+    <script src="js/image-upload.js"></script>
     <script src="js/create_char.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const genderSelect = document.getElementById('gender');
+            const genderCustom = document.getElementById('gender_custom');
+            function updateGenderCustom() {
+                if (genderSelect.value === 'custom') {
+                    genderCustom.style.opacity = 1;
+                    genderCustom.style.pointerEvents = 'auto';
+                } else {
+                    genderCustom.style.opacity = 0;
+                    genderCustom.style.pointerEvents = 'none';
+                }
+            }
+            genderSelect.addEventListener('change', updateGenderCustom);
+            updateGenderCustom();
+        });
+    </script>
 </body>
 </html>

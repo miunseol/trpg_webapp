@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // 추가 정보(나이 / 캐릭터 퍼스널 컬러)
     $age = !empty($_POST['age']) ? trim($_POST['age']) : null;
-    $character_color = !empty($_POST['character_color']) ? trim($_POST['character_color']) : null;
+    $user_color = !empty($_POST['character_color']) ? trim($_POST['character_color']) : null;
     $alias_identity = !empty($_POST['alias_identity']) ? trim($_POST['alias_identity']) : null;
 
     // 메모
@@ -88,20 +88,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // DB 삽입
     $sql = "INSERT INTO character_sheets (
-        name, magic_name, gender, age, character_color, 
+        name, magic_name, gender, age, user_color, 
         tier, archetype_id, organ_id,
         ancestry_id, peerage_id,
         attack_point, defense_point, principal_point,
         grade_points, mana_currency,
         rule_system, strong_field, skills, 
-        magic_power_current, magic_power_current, memo,
+        magic_power_current, magic_power_max, memo,
         image_url, library_image, sovereignty_image, sovereignty_bgm,
         true_form_name, true_form_image, true_form_effect
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'MagicaLogia', ?, ?, 4, 4, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "sssssiiiiiiiiisissssssss", 
-        $char_name, $magic_name, $gender, $age, $character_color,
+        $char_name, $magic_name, $gender, $age, $user_color,
         $tier,
         $archetype_id, $organ_id,
         $ancestry_id, $peerage_id,
