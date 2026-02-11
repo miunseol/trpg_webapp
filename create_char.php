@@ -127,9 +127,6 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                         <option value="양성">양성</option>
                                         <option value="custom">직접 입력</option>
                                     </select>
-                                </div>
-                                <div class="compact-field" id="gender-custom-input">
-                                    <label><span class="required" style="opacity:0;">*</span></label>           
                                     <input type="text" name="gender_custom" id="gender_custom" style="width: 80px; opacity:0; pointer-events:none; transition:opacity 0.3s;" placeholder="성별">
                                 </div>
                                 <!-- 나이 -->
