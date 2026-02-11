@@ -68,9 +68,45 @@
     box-sizing: border-box;
 }
 
-.form-group textarea {
-    min-height: 80px;
-    resize: vertical;
+.form-group.backstory-group {
+    position: relative; /* 자식이 absolute일 때 기준점 */
+    height: 100px; /* 평소 높이 확보 (레이아웃 안 깨지게) */
+    margin-bottom: 20px;
+}
+
+.form-group.backstory-group textarea {
+    width: 100%;
+    height: 100%; /* 부모 높이만큼 */
+    padding: 15px;
+    background: #1a1c23;
+    border: 1px solid #3d4150;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none; /* 드래그 금지 */
+    overflow: hidden; /* 스크롤바 숨김 */
+    
+    /* 애니메이션 설정 */
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top center;
+}
+
+/* ✨ 포커스 됐을 때 (플로팅 효과) */
+.form-group.backstory-group textarea:focus {
+    position: absolute; /* 공중부양 */
+    top: 0;
+    left: 0;
+    z-index: 100; /* 다른 요소들 위로 */
+    
+    /* 높이는 JS로 제어 */
+    
+    /* 스타일 강화 */
+    background: #252833;
+    border-color: #667eea;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* 붕 뜬 느낌 그림자 */
+    outline: none;
 }
 
 .form-group select {
@@ -107,18 +143,23 @@ input[type="number"] {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 12px;
+    gap: 0px;
 }
 
-/* ===== 콤팩트 5칸 (성별/계제/공적점/마화/색상) ===== */
-.compact-row-5 {
+/* ===== 콤팩트 ===== */
+.compact-row {
     display: flex;
     gap: 10px;
+}
+
+.outlook-row {
+    justify-content: space-between;
 }
 
 .compact-field {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .compact-field label {
@@ -138,7 +179,6 @@ input[type="number"] {
     box-sizing: border-box;
     color: #e0e0e0;
     font-size: 13px;
-    width: 100%;
 }
 
 .compact-field input[type="number"] {
@@ -163,37 +203,146 @@ input[type="number"] {
     cursor: pointer;
 }
 
-/* ===== 전투 스탯 가로 배치 ===== */
-.stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 0;
-    padding-bottom: 0;
+/* ==== 성별 직접 입력 필드 표시 ===== */
+.gender-field-wrapper {
+    width: 210px;
+    flex-shrink: 0;
 }
 
-.stat-box {
+.gender-group{
     display: flex;
-    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    transition: all 0.3s ease;
 }
 
-.stat-box label {
-    font-size: 12px;
-    color: #e0e0e0;
-    margin-bottom: 6px;
-    font-weight: 600;
+/* 성별 선택 박스 확장 */
+.gender-group select{
+    flex: 1;
+    width: auto;
+    transition: all 0.3s ease;
+    border-radius: 4px;
 }
 
-.stat-box input {
-    text-align: center;
-    padding: 10px;
-    background: #1a1c23;
+/* 성별 직접 입력 필드 확장 */
+.gender-group input{
+    width: 0;
+    padding: 0;
+    opacity: 0;
+    border: none;
+    margin-left: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+/* 성별이 'custom'일 때 직접 입력 필드 표시 */
+.gender-group.custom-mode{
+    gap: 8px;
+}
+
+.gender-group.custom-mode select{
+    flex: 0 0 60px;
+}
+
+.gender-group.custom-mode input{
+    flex: 1;
+    width: 60px;
+    padding: 8px;
+    opacity: 1;
     border: 1px solid #3d4150;
     border-radius: 4px;
-    box-sizing: border-box;
-    color: #e0e0e0;
-    font-size: 18px;
-    font-weight: 600;
+    pointer-events: auto;
+}
+
+/* ===== 마법진 스탯 입력 필드 ===== */
+.magic-circle-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+
+
+/* SVG 회전 애니메이션 */
+.magic-ring {
+    width: 100%;
+    height: 100%;
+    animation: spin 90s linear infinite; /* 1분에 한 바퀴 천천히 */
+}
+
+.spin-slow {
+    transform-origin: 100px 100px; /* SVG 좌표 기준 회전축 */
+    animation: spin 60s linear infinite;
+}
+
+.spin-reverse {
+    transform-origin: 100px 100px;
+    animation: spin-rev 40s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes spin-rev {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+/* 마법진 룬 문자 폰트 적용 */
+.magic-ring text {
+    font-family: 'UnifrakturMaguntia', cursive; /* 여기서 원하는 폰트로 변경 */
+    font-weight: 150;
+    text-transform: uppercase; /* Cinzel은 대문자가 예뻐 */
+    letter-spacing: 4px; /* 자간을 넓혀야 마법진에 둘렀을 때 멋짐 */
+}
+
+/* 입력 그룹 공통 위치 잡기 */
+.stat-input-group {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translate(-50%, -50%); /* 정확한 중앙 정렬을 위해 */
+}
+
+/* 각 위치 좌표 (SVG 좌표랑 얼추 맞춤) */
+.center { top: 45%; left: 50%; }
+.top-left { top: 22%; left: 12%; }  /* SVG (30, 50) 비율 고려 */
+.top-right { top: 22%; left: 88%; } /* SVG (170, 50) 비율 고려 */
+.bottom { top: 88%; left: 50%; }    /* SVG (100, 170) 비율 고려 */
+
+/* 인풋 스타일 꾸미기 */
+.stat-input-group input {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    background: #1a1c23;
+    border: 2px solid #667eea;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+}
+
+.center input {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
+    font-size: 24px;
+}
+
+.stat-input-group label {
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #ccc;
+    text-shadow: 0 0 4px #000;
 }
 
 /* ===== 이미지 업로드 영역 ===== */
@@ -473,7 +622,7 @@ input[type="number"] {
         align-items: center;
     }
     
-    .compact-row-4 {
+    .compact-row {
         grid-template-columns: 1fr 1fr;
     }
 }

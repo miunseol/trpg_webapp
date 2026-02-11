@@ -54,6 +54,11 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
     <!-- Cropper.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
+    <!-- Google Fonts 불러오기 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;1,600&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="sheet-container" style="position: relative;">
@@ -103,41 +108,43 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                         <!-- 오른쪽: 프로필 정보 -->
                         <div class="profile-right">
                             <!-- 마법명 & 캐릭터 이름 -->
-                            <div class="form-row">
-                                <div class="form-group">
+                            <div class="compact-row char-name-row">
+                                <div class="compact-field">
                                     <label>마법명<span class="required">*</span></label>
                                     <input type="text" name="magic_name" id="magic_name" required placeholder="마법명">
                                 </div>
-                                <div class="form-group">
+                                <div class="compact-field">
                                     <label>캐릭터 이름<span class="required">*</span></label>
                                     <input type="text" name="char_name" id="char_name" required placeholder="이름">
                                 </div>
                             </div>
                             
                             <!-- 성별 / 나이 / 키 / 색상 -->
-                            <div class="compact-row-5">
+                            <div class="compact-row outlook-row">
                                 <!-- 성별 -->
-                                <div class="compact-field">
+                                <div class="compact-field gender-field-wrapper">
                                     <label>성별<span class="required">*</span></label>
-                                    <select name="gender" id="gender" required>
-                                        <option value="">선택</option>
-                                        <option value="남">남</option>
-                                        <option value="여">여</option>
-                                        <option value="무성">무성</option>
-                                        <option value="양성">양성</option>
-                                        <option value="custom">직접 입력</option>
-                                    </select>
-                                    <input type="text" name="gender_custom" id="gender_custom" style="width: 80px; opacity:0; pointer-events:none; transition:opacity 0.3s;" placeholder="성별">
+                                    <div class="gender-group">
+                                        <select name="gender" id="gender" required>
+                                            <option value="">선택</option>
+                                            <option value="남">남</option>
+                                            <option value="여">여</option>
+                                            <option value="무성">무성</option>
+                                            <option value="양성">양성</option>
+                                            <option value="custom">직접 입력</option>
+                                        </select>
+                                        <input type="text" name="gender_custom" id="gender_custom" placeholder="성별">
+                                    </div>
                                 </div>
                                 <!-- 나이 -->
                                 <div class="compact-field">
                                     <label>나이</label>
-                                    <input type="text" name="age" id="age" style="width: 200px" placeholder="예: 외견상 20대지만 사실 300살">
+                                    <input type="text" name="age" id="age" style="width: 190px" placeholder="300살먹은 20대 외모">
                                 </div>
                                 <!-- 키 -->
                                 <div class="compact-field">
                                     <label>키</label>
-                                    <input type="text" name="height" id="height" style="width: 80px">
+                                    <input type="text" name="height" id="height" style="width: 60px">
                                 </div>
                                 <!-- 캐릭터 퍼스널 컬러 -->
                                 <div class="compact-field">
@@ -147,16 +154,20 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                             </div>
 
                             <!-- 나이 / 캐릭터 색상 -->
-                            <div class="form-row">
-                                <div class="form-group">
+                            <div class="compact-row">
+                                <div class="compact-field">
                                     <label>사회적 신분</label>
                                     <input type="text" name="alias_identity" id="alias_identity" placeholder="경찰 / 대학생">
                                 </div>
+                                <div class="compact-field">
+                                    <label>활동 거점</label>
+                                    <input type="text" name="base_of_operations" id="base_of_operations" placeholder="뉴욕 뉴올리언스">
+                                </div>                                
                             </div>
 
                             <!-- 경력 & 기관 -->
-                            <div class="form-row">
-                                <div class="form-group">
+                            <div class="compact-row">
+                                <div class="compact-field">
                                     <label>경력<span class="required">*</span></label>
                                     <select name="archetype_id" id="archetype_id" required>
                                         <option value="">선택하세요</option>
@@ -168,7 +179,7 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                     </select>
                                     <p class="info-text" id="career-duty"></p>
                                 </div>
-                                <div class="form-group">
+                                <div class="compact-field">
                                     <label>소속 기관</label>
                                     <select name="organ_id" id="organ_id">
                                         <option value="">무소속</option>
@@ -182,9 +193,9 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 </div>
                             </div>
 
-                            <!-- 조건부: 이단자 선택 시 종족 (선택) -->
-                            <div class="form-row" id="ancestry-peerage-row">
-                                <div class="form-group">
+                            <!-- 조건부: 경력 이단자 선택 시 종족/작위 활성화 -->
+                            <div class="compact-row" id="ancestry-peerage-row">
+                                <div class="compact-field">
                                     <label>종족 (이단자 전용 - 선택)</label>
                                     <select name="ancestry_id" id="ancestry_id">
                                         <option value="">이종족 사용 안 함</option>
@@ -198,75 +209,106 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                     <p class="info-text" id="peerage-duty">황혼선서 추가 룰</p>
                                 </div>
 
-                                <div class="form-group" id="peerage-section">
+                                <div class="compact-field" id="peerage-section">
                                     <label>작위 (이종족 전용)<span class="required">*</span></label>
                                     <select name="peerage_id" id="peerage_id">
                                         <option value="">선택하세요</option>
                                         <?php foreach($peerages as $peerage): ?>
                                             <option value="<?php echo $peerage['id']; ?>">
-                                                <?php echo $peerage['title_name']; ?>
+                                                <?php echo $peerage['peerage_name']; ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
                                     <p class="info-text">종족의 위계를 나타냅니다.</p>
                                 </div>
                             </div>
-                            <script>
-                            // 경력 선택에 따라 종족/작위 활성화
-                            document.addEventListener('DOMContentLoaded', function() {
-                                const archetypeSelect = document.getElementById('archetype_id');
-                                const ancestrySelect = document.getElementById('ancestry_id');
-                                const peerageSelect = document.getElementById('peerage_id');
-                                function updateAncestryPeerage() {
-                                    const isOutsider = archetypeSelect.value == '5';
-                                    ancestrySelect.disabled = !isOutsider;
-                                    peerageSelect.disabled = !isOutsider;
-                                    ancestrySelect.parentElement.style.opacity = isOutsider ? 1 : 0.5;
-                                    peerageSelect.parentElement.style.opacity = isOutsider ? 1 : 0.5;
-                                }
-                                archetypeSelect.addEventListener('change', updateAncestryPeerage);
-                                updateAncestryPeerage();
-                            });
-                            </script>
 
-                            <!-- 스테이터스 -->
-                            <div class="compact-row-5">
-                                <div class="compact-field">
-                                    <label>공적점</label>
-                                    <input type="number" name="grade_points" id="grade_points" min="0" value="0">
-                                </div>
-                                <div class="compact-field">
-                                    <label>마화</label>
-                                    <input type="number" name="mana_currency" id="mana_currency" min="0" value="0">
-                                </div>
-                            </div>
-                            <div class="compact-row-5">
-                                <div class="compact-field">
-                                    <label>계제<span class="required">*</span></label>
-                                    <input type="number" name="tier" id="tier" min="0" max="7" value="3" required>
-                                </div>
-
-                                <div class="compact-field">
-                                    <label>공격력<span class="required">*</span></label>
-                                    <input type="number" name="attack_point" id="attack_point" min="0" max="7" value="0" required>
-                                </div>
-                                <div class="compact-field">
-                                    <label>방어력<span class="required">*</span></label>
-                                    <input type="number" name="defense_point" id="defense_point" min="0" max="7" value="0" required>
-                                </div>
-                                <div class="compact-field">
-                                    <label>근원력<span class="required">*</span></label>
-                                    <input type="number" name="principal_point" id="principal_point" min="0" max="7" value="0" required>
-                                </div>
-
+                            <!-- 메모 (전체 폭) -->
+                            <div class="form-group full-width backstory-group">
+                                <label>백스토리</label>
+                                <textarea name="backstory" id="backstory" placeholder="캐릭터에 대한 메모를 입력하세요"></textarea>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 메모 (전체 폭) -->
-                    <div class="form-group full-width">
-                        <label>메모 (선택)</label>
-                        <textarea name="memo" id="memo" placeholder="캐릭터에 대한 메모를 입력하세요"></textarea>
+                </div>
+
+                <!-- 스탯 원형 입력 필드 -->
+                <div class="magic-circle-container">
+                    <svg class="magic-ring" viewBox="0 0 200 200">
+                        <defs>
+                            <!-- 룬 문자 경로 정의 (원형 텍스트용) -->
+                            <path id="textCircle" d="M 20,100 A 80,80 0 1,1 180,100 A 80,80 0 1,1 20,100" fill="none" />
+                            <!-- 그라데이션 효과 -->
+                            <radialGradient id="magicGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                <stop offset="0%" stop-color="#f1c40f" stop-opacity="0.3" />
+                                <stop offset="100%" stop-color="#f1c40f" stop-opacity="0" />
+                            </radialGradient>
+                        </defs>
+
+                        <!-- 1. 배경: 은은한 광원 -->
+                        <circle cx="100" cy="100" r="60" fill="url(#magicGlow)" />
+
+                        <!-- 2. 레이어 1: 육망성 (시계 방향 회전) -->
+                        <g class="spin-slow">
+                            <polygon points="100,20 170,140 30,140" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
+                            <polygon points="100,180 30,60 170,60" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
+                            <circle cx="100" cy="100" r="85" fill="none" stroke="#667eea" stroke-width="1" stroke-dasharray="2, 4" opacity="0.3" />
+                        </g>
+
+                        <!-- 3. 레이어 2: 룬 문자 링 (반시계 방향 회전) -->
+                        <g class="spin-reverse">
+                            <circle cx="100" cy="100" r="92" fill="none" stroke="#667eea" stroke-width="1" opacity="0.6"/>
+                            <text fill="#667eea" font-size="10" font-family="monospace" letter-spacing="3" opacity="0.8">
+                                <textPath href="#textCircle" startOffset="0%">
+                                    EGO ET TU • FABULA QUAE TRAGOEDIAM PERDIT • MAGIA • LOGIA • VERITAS • UMBRA • LUX •
+                                </textPath>
+                            </text>
+                        </g>
+
+                        <!-- 4. 레이어 3: 스탯 연결 역삼각형 (고정 - 입력칸이랑 위치 맞춰야 하니까) -->
+                        <g class="static-frame">
+                            <!-- 메인 역삼각형 -->
+                            <polygon points="33,60 167,60 100,177" fill="none" stroke="#f1c40f" stroke-width="2" filter="drop-shadow(0 0 2px #f1c40f)" />
+                            <!-- 장식용 작은 원들 (꼭지점) -->
+                            <circle cx="33" cy="60" r="3" fill="#f1c40f" />
+                            <circle cx="167" cy="60" r="3" fill="#f1c40f" />
+                            <circle cx="100" cy="177" r="3" fill="#f1c40f" />
+                        </g>
+
+                        <!-- 5. 중앙 장식 (계제) -->
+                        <circle cx="100" cy="100" r="30" fill="rgba(26, 28, 35, 0.9)" stroke="#f1c40f" stroke-width="1.5" />
+                        <circle cx="100" cy="100" r="26" fill="none" stroke="#667eea" stroke-width="1" opacity="0.5" />
+                    </svg>
+
+                    <!-- 입력 필드 (해솔이 잡은 위치 그대로!) -->
+                    <div class="stat-input-group center">
+                        <label>계제</label>
+                        <input type="number" name="tier" id="tier" min="0" max="7" value="3" class="hex-input" required>
+                    </div>
+                    <div class="stat-input-group top-left">
+                        <label>공격</label>
+                        <input type="number" name="attack_point" id="attack_point" min="0" max="7" value="3" class="circle-input" required>
+                    </div>
+                    <div class="stat-input-group top-right">
+                        <label>방어</label>
+                        <input type="number" name="defense_point" id="defense_point" min="0" max="7" value="3" class="circle-input" required>
+                    </div>
+                    <div class="stat-input-group bottom">
+                        <label>근원</label>
+                        <input type="number" name="principal_point" id="principal_point" min="0" max="7" value="3" class="circle-input" required>
+                    </div>
+                </div>
+
+                <!-- 스테이터스 -->
+                <div class="compact-row">
+                    <div class="compact-field">
+                        <label>공적점</label>
+                        <input type="number" name="grade_points" id="grade_points" min="0" value="0">
+                    </div>
+                    <div class="compact-field">
+                        <label>마화</label>
+                        <input type="number" name="mana_currency" id="mana_currency" min="0" value="0">
                     </div>
                 </div>
 
@@ -386,22 +428,5 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
 
     <script src="js/image-upload.js"></script>
     <script src="js/create_char.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const genderSelect = document.getElementById('gender');
-            const genderCustom = document.getElementById('gender_custom');
-            function updateGenderCustom() {
-                if (genderSelect.value === 'custom') {
-                    genderCustom.style.opacity = 1;
-                    genderCustom.style.pointerEvents = 'auto';
-                } else {
-                    genderCustom.style.opacity = 0;
-                    genderCustom.style.pointerEvents = 'none';
-                }
-            }
-            genderSelect.addEventListener('change', updateGenderCustom);
-            updateGenderCustom();
-        });
-    </script>
 </body>
 </html>
