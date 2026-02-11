@@ -18,58 +18,93 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* 경력 선택에 따른 숨겨져 있던 종족/작위 활성화 및 초기화 */
 function initAncestryPeerageToggle() {
-    const outsiderOptionRow = document.getElementById('ancestry-peerage-row');
+    let outsiderOptionRow = document.getElementById('ancestry-peerage-column');
     const archetypeSelect = document.getElementById('archetype_id');
-    const ancestrySelect = document.getElementById('ancestry_id');
-    const peerageSelect = document.getElementById('peerage_id');
-    const peerageSection = document.getElementById('peerage-section');
+    let ancestrySelect = document.getElementById('ancestry_id');
+    const profileRight = document.querySelector('.profile-right');
+    const ancestryPeerageRowHTML = outsiderOptionRow ? outsiderOptionRow.outerHTML : '';
 
     // [1] 종족 선택 여부에 따라 작위 필드 제어
     function updatePeerageVisibility() {
         // 이단자가 아니면 무시 (상위 함수에서 처리)
-        if (archetypeSelect.value != '5') return;
+        const ancestryRow = document.getElementById('ancestry-peerage-column');
+        if (!ancestryRow) return;
 
-        const hasAncestry = ancestrySelect.value != '1';   //1번은 이종족 사용 안 함
-        
+        // peerage-section이 이미 있는지 확인
+        let peerageSection = ancestryRow.parentElement.querySelector('#peerage-section');
+        const hasAncestry = ancestrySelect.value && ancestrySelect.value !== '' && ancestrySelect.value !== '1'; // 1번은 이종족 사용 안 함
+
         if (hasAncestry) {
-            // 종족 선택됨 -> 작위 표시 & 활성화
-            peerageSection.style.display = 'block'; 
+            // peerage-section이 없으면 생성해서 ancestryRow 뒤에 삽입
+            if (!peerageSection) {
+                const peerages = window.PEERAGES || [];
+                let peerageOptions = '<option value="">선택하세요</option>';
+                peerages.forEach(p => {
+                    peerageOptions += `<option value="${p.id}">${p.peerage_name}</option>`;
+                });
+                const peerageHTML = `
+                <div class="compact-field" id="peerage-section">
+                    <label>작위 (이종족 전용)<span class="required">*</span></label>
+                    <select name="peerage_id" id="peerage_id">
+                        ${peerageOptions}
+                    </select>
+                    <p class="info-text">종족의 위계를 나타냅니다.</p>
+                </div>`;
+                ancestryRow.insertAdjacentHTML('afterend', peerageHTML);
+                peerageSection = ancestryRow.parentElement.querySelector('#peerage-section');
+            }
+            // 활성화 및 기본값 설정
+            const peerageSelect = peerageSection.querySelector('#peerage_id');
+            peerageSection.style.display = 'flex';
             peerageSection.style.opacity = '1';
             peerageSelect.disabled = false;
+            // 작위 기본값 자동 설정 (남작)
+            if (!peerageSelect.value && peerageSelect.options.length > 1) {
+                peerageSelect.value = peerageSelect.options[1].value;
+            }
         } else {
-            // 종족 선택 안됨 -> 작위 숨김 & 비활성화
-            peerageSection.style.display = 'none';
-            peerageSection.style.opacity = '0';
-            peerageSelect.disabled = true;
-            peerageSelect.value = ''; // 값 초기화
+            // peerage-section이 있으면 제거
+            if (peerageSection) peerageSection.remove();
         }
     }
 
     // [2] 경력(이단자) 선택에 따라 전체 행 제어
     function updateAncestryPeerage() {
-        const isOutsider = archetypeSelect.value == '5';
-        
-        // 이단자 옵션 행 전체 표시/숨김
-        outsiderOptionRow.style.opacity = isOutsider ? 1 : 0.5;
-        outsiderOptionRow.style.display = isOutsider ? 'grid' : 'none';
-        ancestrySelect.disabled = !isOutsider;
+        const isOutsider = archetypeSelect.value == String(OUTSIDER_ARCHETYPE_ID);
+        let ancestryRow = document.getElementById('ancestry-peerage-column');
 
         if (isOutsider) {
-            // 이단자라면 -> 종족 선택 상태 체크해서 작위 표시 결정
+            // DOM에 없으면 삽입
+            if (!ancestryRow) {
+                // 백스토리 textarea-group 앞의 compact-row 내부에 삽입
+                let backstoryGroup = profileRight.querySelector('.compact-field.textarea-group');
+                if (backstoryGroup) {
+                    let compactRow = backstoryGroup.closest('.compact-column').querySelector('.compact-row');
+                    if (compactRow) {
+                        compactRow.insertAdjacentHTML('afterbegin', ancestryPeerageRowHTML);
+                    }
+                }
+                // 새로 삽입된 요소에 대해 변수/이벤트 재등록
+                outsiderOptionRow = document.getElementById('ancestry-peerage-column');
+                ancestrySelect = document.getElementById('ancestry_id');
+                ancestrySelect.addEventListener('change', updatePeerageVisibility);
+            }
+            ancestrySelect.disabled = false;
             updatePeerageVisibility();
         } else {
-            // 이단자 아니면 -> 싹 다 초기화 및 숨김
-            ancestrySelect.value = '';
-            peerageSelect.value = '';
-            peerageSelect.disabled = true;
-            peerageSection.style.display = 'none'; 
+            // DOM에 있으면 제거
+            if (ancestryRow) {
+                // peerage-section도 함께 제거
+                let peerageSection = ancestryRow.parentElement.querySelector('#peerage-section');
+                if (peerageSection) peerageSection.remove();
+                ancestryRow.remove();
+            }
         }
     }
 
     // 이벤트 리스너 등록
     archetypeSelect.addEventListener('change', updateAncestryPeerage);
-    ancestrySelect.addEventListener('change', updatePeerageVisibility);
-
+    if (ancestrySelect) ancestrySelect.addEventListener('change', updatePeerageVisibility);
     updateAncestryPeerage();
 }
 

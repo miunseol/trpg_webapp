@@ -70,14 +70,14 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
         <!-- 캐릭터 시트 폼 -->
         <div class="create-form">
             <form id="create-char-form" method="POST" action="create_char_process.php">
-                <!-- 캐릭터 기본 정보 섹션 -->
+                <!-- 캐릭터 프로필 정보 섹션 -->
                 <div class="form-section">
                     <h3>📋 캐릭터 기본 정보</h3>
-                    
+                    <!-- 프로필 레이아웃 -->
                     <div class="profile-layout">
                         <!-- 왼쪽: 캐릭터 이미지 & 장서 이미지 -->
                         <div class="profile-left">
-                            <div class="form-group">
+                            <div class="compact-field">
                                 <label>캐릭터 이미지</label>
                                 <div class="image-upload-area size-large" data-target="image_url">
                                     <div class="upload-placeholder">
@@ -90,7 +90,7 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 </div>
                                 <input type="hidden" name="image_url" id="image_url">
                             </div>
-                            <div class="form-group">
+                            <div class="compact-field">
                                 <label>장서 이미지</label>
                                 <div class="image-upload-area size-large" data-target="library_image">
                                     <div class="upload-placeholder">
@@ -107,6 +107,7 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
 
                         <!-- 오른쪽: 프로필 정보 -->
                         <div class="profile-right">
+
                             <!-- 마법명 & 캐릭터 이름 -->
                             <div class="compact-row char-name-row">
                                 <div class="compact-field">
@@ -153,7 +154,7 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 </div>
                             </div>
 
-                            <!-- 나이 / 캐릭터 색상 -->
+                            <!-- 사회적 신분 / 활동 거점 -->
                             <div class="compact-row">
                                 <div class="compact-field">
                                     <label>사회적 신분</label>
@@ -193,181 +194,220 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 </div>
                             </div>
 
-                            <!-- 조건부: 경력 이단자 선택 시 종족/작위 활성화 -->
-                            <div class="compact-row" id="ancestry-peerage-row">
-                                <div class="compact-field">
-                                    <label>종족 (이단자 전용 - 선택)</label>
-                                    <select name="ancestry_id" id="ancestry_id">
-                                        <option value="">이종족 사용 안 함</option>
-                                        <?php foreach($ancestries as $ancestry): ?>
-                                            <option value="<?php echo $ancestry['id']; ?>"
-                                                    data-duty="<?php echo htmlspecialchars($ancestry['duty']); ?>">
-                                                <?php echo $ancestry['name_kr']; ?> (<?php echo $ancestry['name_ruby']; ?>)
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <p class="info-text" id="peerage-duty">황혼선서 추가 룰</p>
+                            <!-- 이종족 및 백스토리 -->
+                            <div class="compact-column">
+                                <div class="compact-row">
+                                    <!-- 조건부: 경력 이단자 선택 시 종족 활성화 -->
+                                    <div class="compact-field" id="ancestry-peerage-column">
+                                        <label>종족 (이단자 전용 - 선택)</label>
+                                        <select name="ancestry_id" id="ancestry_id">
+                                            <option value="">이종족 사용 안 함</option>
+                                            <?php foreach($ancestries as $ancestry): ?>
+                                                <option value="<?php echo $ancestry['id']; ?>"
+                                                        data-duty="<?php echo htmlspecialchars($ancestry['duty']); ?>">
+                                                    <?php echo $ancestry['name_kr']; ?> (<?php echo $ancestry['name_ruby']; ?>)
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <p class="info-text" id="peerage-duty">황혼선서 추가 룰</p>
+                                    </div>
+                                    <!-- peerage-section은 JS에서 조건을 만족할 때만 동적으로 삽입됨 -->
+                                    <script>
+                                    // PHP peerages 배열을 JS로 전달
+                                    window.PEERAGES = <?php echo json_encode($peerages, JSON_UNESCAPED_UNICODE); ?>;
+                                    </script>
                                 </div>
 
-                                <div class="compact-field" id="peerage-section">
-                                    <label>작위 (이종족 전용)<span class="required">*</span></label>
-                                    <select name="peerage_id" id="peerage_id">
-                                        <option value="">선택하세요</option>
-                                        <?php foreach($peerages as $peerage): ?>
-                                            <option value="<?php echo $peerage['id']; ?>">
-                                                <?php echo $peerage['peerage_name']; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <p class="info-text">종족의 위계를 나타냅니다.</p>
+                                <!-- 백스토리 -->                            
+                                <div class="compact-field textarea-group">
+                                    <label>백스토리</label>
+                                    <textarea name="backstory" id="backstory" placeholder="캐릭터는 대법전에서 어떤 입지를 가지는가&#10;캐릭터는 어떤 성격인가&#10;캐릭터는 어떤 과거를 겪었는가"></textarea>
                                 </div>
-                            </div>
-
-                            <!-- 메모 (전체 폭) -->
-                            <div class="form-group full-width backstory-group">
-                                <label>백스토리</label>
-                                <textarea name="backstory" id="backstory" placeholder="캐릭터에 대한 메모를 입력하세요"></textarea>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
-                <!-- 스탯 원형 입력 필드 -->
-                <div class="magic-circle-container">
-                    <svg class="magic-ring" viewBox="0 0 200 200">
-                        <defs>
-                            <!-- 룬 문자 경로 정의 (원형 텍스트용) -->
-                            <path id="textCircle" d="M 20,100 A 80,80 0 1,1 180,100 A 80,80 0 1,1 20,100" fill="none" />
-                            <!-- 그라데이션 효과 -->
-                            <radialGradient id="magicGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                                <stop offset="0%" stop-color="#f1c40f" stop-opacity="0.3" />
-                                <stop offset="100%" stop-color="#f1c40f" stop-opacity="0" />
-                            </radialGradient>
-                        </defs>
-
-                        <!-- 1. 배경: 은은한 광원 -->
-                        <circle cx="100" cy="100" r="60" fill="url(#magicGlow)" />
-
-                        <!-- 2. 레이어 1: 육망성 (시계 방향 회전) -->
-                        <g class="spin-slow">
-                            <polygon points="100,20 170,140 30,140" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
-                            <polygon points="100,180 30,60 170,60" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
-                            <circle cx="100" cy="100" r="85" fill="none" stroke="#667eea" stroke-width="1" stroke-dasharray="2, 4" opacity="0.3" />
-                        </g>
-
-                        <!-- 3. 레이어 2: 룬 문자 링 (반시계 방향 회전) -->
-                        <g class="spin-reverse">
-                            <circle cx="100" cy="100" r="92" fill="none" stroke="#667eea" stroke-width="1" opacity="0.6"/>
-                            <text fill="#667eea" font-size="10" font-family="monospace" letter-spacing="3" opacity="0.8">
-                                <textPath href="#textCircle" startOffset="0%">
-                                    EGO ET TU • FABULA QUAE TRAGOEDIAM PERDIT • MAGIA • LOGIA • VERITAS • UMBRA • LUX •
-                                </textPath>
-                            </text>
-                        </g>
-
-                        <!-- 4. 레이어 3: 스탯 연결 역삼각형 (고정 - 입력칸이랑 위치 맞춰야 하니까) -->
-                        <g class="static-frame">
-                            <!-- 메인 역삼각형 -->
-                            <polygon points="33,60 167,60 100,177" fill="none" stroke="#f1c40f" stroke-width="2" filter="drop-shadow(0 0 2px #f1c40f)" />
-                            <!-- 장식용 작은 원들 (꼭지점) -->
-                            <circle cx="33" cy="60" r="3" fill="#f1c40f" />
-                            <circle cx="167" cy="60" r="3" fill="#f1c40f" />
-                            <circle cx="100" cy="177" r="3" fill="#f1c40f" />
-                        </g>
-
-                        <!-- 5. 중앙 장식 (계제) -->
-                        <circle cx="100" cy="100" r="30" fill="rgba(26, 28, 35, 0.9)" stroke="#f1c40f" stroke-width="1.5" />
-                        <circle cx="100" cy="100" r="26" fill="none" stroke="#667eea" stroke-width="1" opacity="0.5" />
-                    </svg>
-
-                    <!-- 입력 필드 (해솔이 잡은 위치 그대로!) -->
-                    <div class="stat-input-group center">
-                        <label>계제</label>
-                        <input type="number" name="tier" id="tier" min="0" max="7" value="3" class="hex-input" required>
-                    </div>
-                    <div class="stat-input-group top-left">
-                        <label>공격</label>
-                        <input type="number" name="attack_point" id="attack_point" min="0" max="7" value="3" class="circle-input" required>
-                    </div>
-                    <div class="stat-input-group top-right">
-                        <label>방어</label>
-                        <input type="number" name="defense_point" id="defense_point" min="0" max="7" value="3" class="circle-input" required>
-                    </div>
-                    <div class="stat-input-group bottom">
-                        <label>근원</label>
-                        <input type="number" name="principal_point" id="principal_point" min="0" max="7" value="3" class="circle-input" required>
-                    </div>
-                </div>
-
-                <!-- 스테이터스 -->
-                <div class="compact-row">
-                    <div class="compact-field">
-                        <label>공적점</label>
-                        <input type="number" name="grade_points" id="grade_points" min="0" value="0">
-                    </div>
-                    <div class="compact-field">
-                        <label>마화</label>
-                        <input type="number" name="mana_currency" id="mana_currency" min="0" value="0">
-                    </div>
-                </div>
-
-                <!-- 진정한 모습 섹션 -->
+                <!-- 캐릭터 데이터 정보 섹션 -->
                 <div class="form-section">
-                    <h3>✨ 진정한 모습 (선택)</h3>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>진정한 모습 이름</label>
-                            <input type="text" name="true_form_name" id="true_form_name" placeholder="예: 불타는 날개">
-                        </div>
+                    <h3>🧙‍♂️ 캐릭터 데이터 정보</h3>
 
-                        <!-- 진정한 모습 이미지 (중간) -->
-                        <div class="form-group">
-                            <label>진정한 모습 이미지</label>
-                            <div class="image-upload-area size-medium" data-target="true_form_image">
-                                <div class="upload-placeholder">
-                                    <span class="upload-icon">✨</span>
-                                    <p>진정한 모습</p>
-                                    <small>1:1 비율</small>
-                                </div>
-                                <img class="preview-image" style="display: none;">
-                                <input type="file" class="file-input" accept="image/*" style="display: none;">
+                    <!-- 스탯 입력 필드 그룹 -->
+                    <div class="profile-layout">
+                        <!-- 스탯 원형 입력 필드 -->
+                        <div class="magic-circle-container">
+                            <svg class="magic-ring" viewBox="0 0 200 200">
+                                <defs>
+                                    <!-- 룬 문자 경로 정의 (원형 텍스트용) -->
+                                    <path id="textCircle" d="M 20,100 A 80,80 0 1,1 180,100 A 80,80 0 1,1 20,100" fill="none" />
+                                    <!-- 그라데이션 효과 -->
+                                    <radialGradient id="magicGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                        <stop offset="0%" stop-color="#f1c40f" stop-opacity="0.3" />
+                                        <stop offset="100%" stop-color="#f1c40f" stop-opacity="0" />
+                                    </radialGradient>
+                                </defs>
+
+                                <!-- 1. 배경: 은은한 광원 -->
+                                <circle cx="100" cy="100" r="60" fill="url(#magicGlow)" />
+
+                                <!-- 2. 레이어 1: 육망성 (시계 방향 회전) -->
+                                <g class="spin-slow">
+                                    <polygon points="100,20 170,140 30,140" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
+                                    <polygon points="100,180 30,60 170,60" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
+                                    <circle cx="100" cy="100" r="85" fill="none" stroke="#667eea" stroke-width="1" stroke-dasharray="2, 4" opacity="0.3" />
+                                </g>
+
+                                <!-- 3. 레이어 2: 룬 문자 링 (반시계 방향 회전) -->
+                                <g class="spin-reverse">
+                                    <circle cx="100" cy="100" r="92" fill="none" stroke="#667eea" stroke-width="1" opacity="0.6"/>
+                                    <text fill="#667eea" font-size="10" font-family="monospace" letter-spacing="3" opacity="0.8">
+                                        <textPath href="#textCircle" startOffset="0%">
+                                            EGO ET TU • FABULA QUAE TRAGOEDIAM PERDIT • MAGIA • LOGIA • VERITAS • UMBRA • LUX •
+                                        </textPath>
+                                    </text>
+                                </g>
+
+                                <!-- 4. 레이어 3: 스탯 연결 역삼각형 (고정 - 입력칸이랑 위치 맞춰야 하니까) -->
+                                <g class="static-frame">
+                                    <!-- 메인 역삼각형 -->
+                                    <polygon points="33,60 167,60 100,177" fill="none" stroke="#f1c40f" stroke-width="2" filter="drop-shadow(0 0 2px #f1c40f)" />
+                                    <!-- 장식용 작은 원들 (꼭지점) -->
+                                    <circle cx="33" cy="60" r="3" fill="#f1c40f" />
+                                    <circle cx="167" cy="60" r="3" fill="#f1c40f" />
+                                    <circle cx="100" cy="177" r="3" fill="#f1c40f" />
+                                </g>
+
+                                <!-- 5. 중앙 장식 (계제) -->
+                                <circle cx="100" cy="100" r="30" fill="rgba(26, 28, 35, 0.9)" stroke="#f1c40f" stroke-width="1.5" />
+                                <circle cx="100" cy="100" r="26" fill="none" stroke="#667eea" stroke-width="1" opacity="0.5" />
+                            </svg>
+
+                            <!-- 입력 필드 (해솔이 잡은 위치 그대로!) -->
+                            <div class="stat-input-group center">
+                                <label>계제</label>
+                                <input type="number" name="tier" id="tier" min="0" max="7" value="3" class="hex-input" required>
                             </div>
-                            <input type="hidden" name="true_form_image" id="true_form_image">
-                        </div>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>진정한 모습 효과</label>
-                        <textarea name="true_form_effect" id="true_form_effect" placeholder="진정한 모습의 효과를 입력하세요. 예: 전투 중 1회, 【공격력】+2"></textarea>
-                        <p class="info-text">진정한 모습의 특수 효과나 능력을 설명하세요.</p>
-                    </div>
-
-                    <div class="form-row">
-                        <!-- 주권 이미지 (중간) -->
-                        <div class="form-group">
-                            <label>주권 이미지</label>
-                            <div class="image-upload-area size-medium" data-target="sovereignty_image">
-                                <div class="upload-placeholder">
-                                    <span class="upload-icon">👑</span>
-                                    <p>주권 이미지</p>
-                                    <small>1:1 비율</small>
-                                </div>
-                                <img class="preview-image" style="display: none;">
-                                <input type="file" class="file-input" accept="image/*" style="display: none;">
+                            <div class="stat-input-group top-left">
+                                <label>공격</label>
+                                <input type="number" name="attack_point" id="attack_point" min="0" max="7" value="3" class="circle-input" required>
                             </div>
-                            <input type="hidden" name="sovereignty_image" id="sovereignty_image">
+                            <div class="stat-input-group top-right">
+                                <label>방어</label>
+                                <input type="number" name="defense_point" id="defense_point" min="0" max="7" value="3" class="circle-input" required>
+                            </div>
+                            <div class="stat-input-group bottom">
+                                <label>근원</label>
+                                <input type="number" name="principal_point" id="principal_point" min="0" max="7" value="3" class="circle-input" required>
+                            </div>
                         </div>
-
-                        <!-- 주권 BGM URL -->
-                        <div class="form-group">
-                            <label>주권 BGM URL</label>
-                            <input type="text" name="sovereignty_bgm" id="sovereignty_bgm" placeholder="https://example.com/bgm.mp3">
-                            <p class="info-text">마법사의 테마 음악</p>
+                        <!-- 공적점 및 마화 입력 필드 -->
+                        <div class="compact-row">
+                            <div class="compact-field">
+                                <label>공적점</label>
+                                <input type="number" name="grade_points" id="grade_points" min="0" value="0">
+                            </div>
+                            <div class="compact-field">
+                                <label>마화</label>
+                                <input type="number" name="mana_currency" id="mana_currency" min="0" value="0">
+                            </div>
                         </div>
                     </div>
+
+                    <!-- 진정한 모습 & 주권 섹션 -->
+                    <h3>✨ 진정한 모습 & 주권</h3>
+                    <div class="magic-profile-layout">
+                            <!-- [왼쪽] 진정한 모습 영역 -->
+                            <div class="magic-left">
+                                <!-- 진정한 모습 이미지 -->
+                                <div class="form-group center-align">
+                                    <label>진정한 모습</label>
+                                    <div class="image-upload-area size-medium" data-target="true_form_image">
+                                        <div class="upload-placeholder">
+                                            <span class="upload-icon">✨</span>
+                                            <p>이미지 업로드</p>
+                                        </div>
+                                        <img class="preview-image" style="display: none;">
+                                        <input type="file" class="file-input" accept="image/*" style="display: none;">
+                                    </div>
+                                    <input type="hidden" name="true_form_image" id="true_form_image" placeholder="진정한 모습의 이름">
+                                </div>
+                                <!-- 진정한 모습 효과 -->
+                                 <div class="form-group">
+                                    <label>진정한 모습 효과</label>
+                                    
+                                    <!-- 1. 효과 선택 드롭다운 -->
+                                    <select name="true_form_type" id="true_form_type" style="margin-bottom: 10px;">
+                                        <option value="">-- 효과 선택 --</option>
+                                        <option value="atk">공격 강화</option>
+                                        <option value="def">방어 강화</option>
+                                        <option value="origin">근원 강화</option>
+                                        <option value="mana">마력 강화</option>
+                                        <option value="revive">소생</option>
+                                        <option value="custom">직접 입력 (하우스 룰 등)</option>
+                                    </select>
+
+                                    <!-- 2. 효과 설명 보여주는 박스 (평소엔 여기 뜸) -->
+                                    <div id="effect-description" class="info-box">
+                                        진정한 모습의 효과를 선택하면 여기에 설명이 나타납니다.
+                                    </div>
+
+                                    <!-- 3. 직접 입력용 텍스트 영역 (평소엔 숨김) -->
+                                    <textarea 
+                                        name="true_form_effect_custom" 
+                                        id="true_form_effect_custom" 
+                                        class="simple-textarea" 
+                                        style="display: none;" 
+                                        placeholder="효과를 직접 입력하세요."></textarea>
+                                        
+                                    <!-- 실제 DB로 넘어갈 값 (JS가 채워줌) -->
+                                    <input type="hidden" name="true_form_effect" id="true_form_effect">
+                                </div>
+                            </div>
+                            <!-- [가운데] 구분선 -->
+                            <div class="magic-center">
+                                <div class="divider-vertical"></div>
+                            </div>
+                            <!-- [오른쪽] 주권 영역 -->
+                            <div class="magic-right">
+                                <!-- 주권 이미지 -->
+                                <div class="compact-field center-align">
+                                    <label>주권 (영역)</label>
+                                    <div class="image-upload-area size-medium" data-target="sovereignty_image">
+                                        <div class="upload-placeholder">
+                                            <span class="upload-icon">👑</span>
+                                            <p>이미지 업로드</p>
+                                        </div>
+                                        <img class="preview-image" style="display: none;">
+                                        <input type="file" class="file-input" accept="image/*" style="display: none;">
+                                    </div>
+                                </div>
+                                <!-- 클래스 재사용: backstory-group -> floating-textarea-group 으로 이름만 바꿔서 공통화 추천 -->
+                                <div class="compact-field textarea-group">
+                                    <label>주권 묘사</label>
+                                    <textarea name="sovereignty_desc" id="sovereignty_desc" placeholder="주권의 형태와 연출을 묘사하세요."></textarea>
+                                </div>
+
+                                <!-- 3. 주권 BGM -->
+                                <div class="compact-field">
+                                    <label>주권 BGM URL</label>
+                                    <input type="text" name="sovereignty_bgm" id="sovereignty_bgm" placeholder="Youtube 또는 MP3 링크">
+                                </div>
+                            </div>
+
+                            <!-- [오른쪽] 정보 입력 영역 -->
+                            <div class="magic-right">
+                                <!-- 1. 진정한 모습 이름 -->
+                                <div class="form-group">
+                                    <label>진정한 모습 이름</label>
+                                    <input type="text" name="true_form_name" id="true_form_name" placeholder="예: 불타는 날개, 심연의 눈">
+                                </div>
+
+                                <!-- 2. 진정한 모습 효과 (플로팅 적용!) -->
+
+                            </div>
+                        </div>
                 </div>
+
 
                 <input type="hidden" name="specialty_field" id="specialty_field" value="">
                 <input type="hidden" name="skills" id="skills" value="[]">

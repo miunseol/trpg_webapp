@@ -23,107 +23,6 @@
     font-size: 18px;
 }
 
-/* ===== 폼 레이아웃 ===== */
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.form-group {
-    margin-bottom: 0px;
-}
-
-.form-group.full-width {
-    grid-column: 1 / -1;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #e0e0e0;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.form-group label .required {
-    color: #f1c40f;
-    margin-left: 3px;
-}
-
-/* ===== 입력 필드 스타일 ===== */
-.form-group input[type="text"],
-.form-group input[type="number"],
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    background: #1a1c23;
-    border: 1px solid #3d4150;
-    border-radius: 4px;
-    color: #e0e0e0;
-    font-family: 'Pretendard', sans-serif;
-    font-size: 14px;
-    box-sizing: border-box;
-}
-
-.form-group.backstory-group {
-    position: relative; /* 자식이 absolute일 때 기준점 */
-    height: 100px; /* 평소 높이 확보 (레이아웃 안 깨지게) */
-    margin-bottom: 20px;
-}
-
-.form-group.backstory-group textarea {
-    width: 100%;
-    height: 100%; /* 부모 높이만큼 */
-    padding: 15px;
-    background: #1a1c23;
-    border: 1px solid #3d4150;
-    border-radius: 8px;
-    color: #e0e0e0;
-    font-family: 'Pretendard', sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
-    resize: none; /* 드래그 금지 */
-    overflow: hidden; /* 스크롤바 숨김 */
-    
-    /* 애니메이션 설정 */
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: top center;
-}
-
-/* ✨ 포커스 됐을 때 (플로팅 효과) */
-.form-group.backstory-group textarea:focus {
-    position: absolute; /* 공중부양 */
-    top: 0;
-    left: 0;
-    z-index: 100; /* 다른 요소들 위로 */
-    
-    /* 높이는 JS로 제어 */
-    
-    /* 스타일 강화 */
-    background: #252833;
-    border-color: #667eea;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* 붕 뜬 느낌 그림자 */
-    outline: none;
-}
-
-.form-group select {
-    cursor: pointer;
-}
-
-/* number input 증감 버튼 제거 */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-
 /* ===== 프로필 레이아웃 ===== */
 .profile-layout {
     display: grid;
@@ -142,8 +41,9 @@ input[type="number"] {
 .profile-right {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 0px;
+    justify-content: flex-start;
+    gap: 20px;
+    height: 100%;
 }
 
 /* ===== 콤팩트 ===== */
@@ -152,7 +52,15 @@ input[type="number"] {
     gap: 10px;
 }
 
-.outlook-row {
+.compact-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+}
+
+.compact-row .outlook-row {
     justify-content: space-between;
 }
 
@@ -162,6 +70,8 @@ input[type="number"] {
     width: 100%;
 }
 
+
+/* ===== 입력 필드 스타일 ===== */
 .compact-field label {
     font-size: 12px;
     color: #e0e0e0;
@@ -203,7 +113,112 @@ input[type="number"] {
     cursor: pointer;
 }
 
-/* ==== 성별 직접 입력 필드 표시 ===== */
+.compact-field.textarea-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 160px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    isolation: isolate;
+}
+
+.compact-field.textarea-group label {
+    position: block;
+    top: 15px;
+    left: 15px;
+    color: #e0e0e0;;
+    font-size: 14px;
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.compact-field.textarea-group textarea {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    background: #1a1c23;
+    border: 1px solid #3d4150;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    box-sizing: border-box;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* number input 증감 버튼 제거 */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* ===== 특수 입력 필드 스타일 ===== */
+/* ===== 특수 입력 필드 스타일 : 작위 등급 필드 ===== */
+.compact-row #ancestry-peerage-column {
+    display: flex !important;
+    width: auto;
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+    margin: 0;
+}
+.compact-row #peerage-section {
+    display: none;
+    width: auto;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.compact-row #peerage-section label,
+.compact-row #peerage-section select,
+.compact-row #peerage-section p {
+    width: 100%;
+    display: block;
+}
+/* ===== 특수 입력 필드 스타일 : 백스토리 필드 ===== */
+.compact-field.textarea-group > textarea {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    background: #1a1c23;
+    border: 1px solid #3d4150;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    overflow: hidden;
+    box-sizing: border-box;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* ===== 특수 입력 필드 스타일 : 백스토리 필드 - 포커싱(플로팅 효과) ===== */
+
+
+.compact-field.textarea-group:focus-within textarea {
+    position: absolute;
+    top: 26px;
+    left: 0;
+    right: 0;
+    min-height: 100px;
+    height: 100%;
+    overflow: hidden;
+    z-index: 100;
+    background: #252833;
+    border-color: #667eea;
+    box-shadow: none;
+    outline: none;
+}
+
+/* ===== 특수 입력 필드 스타일 : 성별 직접 입력 필드 ===== */
 .gender-field-wrapper {
     width: 210px;
     flex-shrink: 0;
@@ -216,7 +231,6 @@ input[type="number"] {
     transition: all 0.3s ease;
 }
 
-/* 성별 선택 박스 확장 */
 .gender-group select{
     flex: 1;
     width: auto;
@@ -224,7 +238,6 @@ input[type="number"] {
     border-radius: 4px;
 }
 
-/* 성별 직접 입력 필드 확장 */
 .gender-group input{
     width: 0;
     padding: 0;
@@ -235,7 +248,7 @@ input[type="number"] {
     transition: all 0.3s ease;
 }
 
-/* 성별이 'custom'일 때 직접 입력 필드 표시 */
+/* ===== 특수 입력 필드 스타일 : 성별 직접 입력 필드 - custom(직접 입력 필드 표시) ===== */
 .gender-group.custom-mode{
     gap: 8px;
 }
@@ -254,7 +267,7 @@ input[type="number"] {
     pointer-events: auto;
 }
 
-/* ===== 마법진 스탯 입력 필드 ===== */
+/* ===== 특수 입력 필드 스타일 : 마법진 스탯 입력 필드 ===== */
 .magic-circle-container {
     position: relative;
     width: 200px;
@@ -262,17 +275,15 @@ input[type="number"] {
     margin: 0 auto; /* 중앙 정렬 */
 }
 
-
-
-/* SVG 회전 애니메이션 */
+/* ===== 특수 입력 필드 스타일 : 마법진 스탯 입력 필드 - SVG 회전 애니메이션 ===== */
 .magic-ring {
     width: 100%;
     height: 100%;
-    animation: spin 90s linear infinite; /* 1분에 한 바퀴 천천히 */
+    animation: spin 90s linear infinite;
 }
 
 .spin-slow {
-    transform-origin: 100px 100px; /* SVG 좌표 기준 회전축 */
+    transform-origin: 100px 100px;
     animation: spin 60s linear infinite;
 }
 
@@ -291,15 +302,13 @@ input[type="number"] {
     to { transform: rotate(0deg); }
 }
 
-/* 마법진 룬 문자 폰트 적용 */
 .magic-ring text {
     font-family: 'UnifrakturMaguntia', cursive; /* 여기서 원하는 폰트로 변경 */
     font-weight: 150;
-    text-transform: uppercase; /* Cinzel은 대문자가 예뻐 */
-    letter-spacing: 4px; /* 자간을 넓혀야 마법진에 둘렀을 때 멋짐 */
+    text-transform: lowercase;
+    letter-spacing: 4px;
 }
 
-/* 입력 그룹 공통 위치 잡기 */
 .stat-input-group {
     position: absolute;
     display: flex;
@@ -308,13 +317,11 @@ input[type="number"] {
     transform: translate(-50%, -50%); /* 정확한 중앙 정렬을 위해 */
 }
 
-/* 각 위치 좌표 (SVG 좌표랑 얼추 맞춤) */
 .center { top: 45%; left: 50%; }
 .top-left { top: 22%; left: 12%; }  /* SVG (30, 50) 비율 고려 */
 .top-right { top: 22%; left: 88%; } /* SVG (170, 50) 비율 고려 */
 .bottom { top: 88%; left: 50%; }    /* SVG (100, 170) 비율 고려 */
 
-/* 인풋 스타일 꾸미기 */
 .stat-input-group input {
     width: 30px;
     height: 30px;
@@ -590,25 +597,7 @@ input[type="number"] {
 .info-text {
     font-size: 12px;
     color: #888;
-    margin-top: 5px;
-}
-
-/* ===== 조건부 필드 ===== */
-.conditional-field {
-    display: none;
-}
-
-.conditional-field.show {
-    display: grid;
-}
-
-/* 조건부 필드 절대 위치 (경력/기관 위의 공간 활용) */
-#ancestry-section {
-    position: absolute;
-    top: -85px;
-    left: 0;
-    right: 0;
-    z-index: 5;
+    margin: 0px;
 }
 
 /* ===== 반응형 ===== */
