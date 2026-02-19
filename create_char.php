@@ -300,112 +300,132 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 <input type="number" name="principal_point" id="principal_point" min="0" max="7" value="3" class="circle-input" required>
                             </div>
                         </div>
-                        <!-- 공적점 및 마화 입력 필드 -->
+                        <!-- 마법사 데이터 필드 -->
                         <div class="compact-row">
-                            <div class="compact-field">
-                                <label>공적점</label>
-                                <input type="number" name="grade_points" id="grade_points" min="0" value="0">
+                            <!--공적점 및 마화 입력 필드 -->
+                            <div class="compact-column">
+                                <div class="compact-field">
+                                    <div class="compact-row">
+                                        <div class="compact-column">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                                <polygon points="12,2 13.8,10.2 22,12 13.8,13.8 12,22 10.2,13.8 2,12 10.2,10.2" fill="white" stroke="none"/>
+                                            </svg>
+                                            <label>공적점</label>
+                                        </div>
+                                        <input type="number" name="grade_points" id="grade_points" min="0" value="0">
+                                    </div>
+                                </div>
+                                <div class="compact-field">
+                                    <div class="compact-row">
+                                        <div class="compact-column">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                                <!-- 윗면 (밝은 파랑) -->
+                                                <polygon points="8,4 16,4 20,9 12,9" fill="#60A5FA"/>
+                                                <polygon points="4,9 12,9 20,9 12,20" fill="#2563EB"/>
+                                                <!-- 왼쪽 면 (어두운 파랑) -->
+                                                <polygon points="4,9 12,9 12,20" fill="#1D4ED8"/>
+                                                <!-- 오른쪽 면 (중간 파랑) -->
+                                                <polygon points="20,9 12,9 12,20" fill="#3B82F6"/>
+                                                <!-- 윗면 좌우 귀퉁이 -->
+                                                <polygon points="4,9 8,4 12,9" fill="#93C5FD"/>
+                                                <polygon points="20,9 16,4 12,9" fill="#BFDBFE"/>
+                                            </svg>
+                                            <label>마화</label>
+                                        </div>
+                                        <input type="number" name="mana_currency" id="mana_currency" min="0" value="0">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="compact-field">
-                                <label>마화</label>
-                                <input type="number" name="mana_currency" id="mana_currency" min="0" value="0">
+                            <div class="compact-column">
+                                <div class="compact-field">
+                                    <label>특기사항</label>
+                                    <input type="text" name="special_notes" id="special_notes" placeholder="특기사항을 입력하세요">
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 진정한 모습 & 주권 섹션 -->
                     <h3>✨ 진정한 모습 & 주권</h3>
-                    <div class="magic-profile-layout">
-                            <!-- [왼쪽] 진정한 모습 영역 -->
-                            <div class="magic-left">
+                    <div class="profile-layout magic-section">
+                        <!-- [왼쪽] 진정한 모습 영역 -->
+                        <div class="profile-left">
+                            <div class="form-group center-align">
                                 <!-- 진정한 모습 이미지 -->
-                                <div class="form-group center-align">
-                                    <label>진정한 모습</label>
-                                    <div class="image-upload-area size-medium" data-target="true_form_image">
-                                        <div class="upload-placeholder">
-                                            <span class="upload-icon">✨</span>
-                                            <p>이미지 업로드</p>
-                                        </div>
-                                        <img class="preview-image" style="display: none;">
-                                        <input type="file" class="file-input" accept="image/*" style="display: none;">
+                                <label>진정한 모습</label>
+                                <div class="image-upload-area size-large" data-target="true_form_image">
+                                    <div class="upload-placeholder">
+                                        <span class="upload-icon">✨</span>
+                                        <p>이미지 업로드</p>
                                     </div>
-                                    <input type="hidden" name="true_form_image" id="true_form_image" placeholder="진정한 모습의 이름">
+                                    <img class="preview-image" style="display: none;">
+                                    <input type="file" class="file-input" accept="image/*" style="display: none;">
                                 </div>
-                                <!-- 진정한 모습 효과 -->
-                                 <div class="form-group">
-                                    <label>진정한 모습 효과</label>
-                                    
-                                    <!-- 1. 효과 선택 드롭다운 -->
-                                    <select name="true_form_type" id="true_form_type" style="margin-bottom: 10px;">
-                                        <option value="">-- 효과 선택 --</option>
-                                        <option value="atk">공격 강화</option>
-                                        <option value="def">방어 강화</option>
-                                        <option value="origin">근원 강화</option>
-                                        <option value="mana">마력 강화</option>
-                                        <option value="revive">소생</option>
-                                        <option value="custom">직접 입력 (하우스 룰 등)</option>
-                                    </select>
-
-                                    <!-- 2. 효과 설명 보여주는 박스 (평소엔 여기 뜸) -->
-                                    <div id="effect-description" class="info-box">
-                                        진정한 모습의 효과를 선택하면 여기에 설명이 나타납니다.
-                                    </div>
-
-                                    <!-- 3. 직접 입력용 텍스트 영역 (평소엔 숨김) -->
-                                    <textarea 
-                                        name="true_form_effect_custom" 
-                                        id="true_form_effect_custom" 
-                                        class="simple-textarea" 
-                                        style="display: none;" 
-                                        placeholder="효과를 직접 입력하세요."></textarea>
-                                        
-                                    <!-- 실제 DB로 넘어갈 값 (JS가 채워줌) -->
-                                    <input type="hidden" name="true_form_effect" id="true_form_effect">
-                                </div>
-                            </div>
-                            <!-- [가운데] 구분선 -->
-                            <div class="magic-center">
-                                <div class="divider-vertical"></div>
-                            </div>
-                            <!-- [오른쪽] 주권 영역 -->
-                            <div class="magic-right">
-                                <!-- 주권 이미지 -->
-                                <div class="compact-field center-align">
-                                    <label>주권 (영역)</label>
-                                    <div class="image-upload-area size-medium" data-target="sovereignty_image">
-                                        <div class="upload-placeholder">
-                                            <span class="upload-icon">👑</span>
-                                            <p>이미지 업로드</p>
-                                        </div>
-                                        <img class="preview-image" style="display: none;">
-                                        <input type="file" class="file-input" accept="image/*" style="display: none;">
-                                    </div>
-                                </div>
-                                <!-- 클래스 재사용: backstory-group -> floating-textarea-group 으로 이름만 바꿔서 공통화 추천 -->
-                                <div class="compact-field textarea-group">
-                                    <label>주권 묘사</label>
-                                    <textarea name="sovereignty_desc" id="sovereignty_desc" placeholder="주권의 형태와 연출을 묘사하세요."></textarea>
-                                </div>
-
-                                <!-- 3. 주권 BGM -->
-                                <div class="compact-field">
-                                    <label>주권 BGM URL</label>
-                                    <input type="text" name="sovereignty_bgm" id="sovereignty_bgm" placeholder="Youtube 또는 MP3 링크">
-                                </div>
+                                <input type="hidden" name="true_form_image" id="true_form_image" placeholder="진정한 모습의 이름">
+                                <!-- 진정한 모습 이름 -->
+                                <label>진정한 모습 이름</label>
+                                <input type="text" name="true_form_name" id="true_form_name" placeholder="예: 불타는 날개, 심연의 눈">
                             </div>
 
-                            <!-- [오른쪽] 정보 입력 영역 -->
-                            <div class="magic-right">
-                                <!-- 1. 진정한 모습 이름 -->
+                            <!-- 진정한 모습 효과 -->
                                 <div class="form-group">
-                                    <label>진정한 모습 이름</label>
-                                    <input type="text" name="true_form_name" id="true_form_name" placeholder="예: 불타는 날개, 심연의 눈">
+                                <label>진정한 모습 효과</label>
+                                
+                                <!-- 1. 효과 선택 드롭다운 -->
+                                <select name="true_form_type" id="true_form_type" style="margin-bottom: 10px;">
+                                    <option value="">-- 효과 선택 --</option>
+                                    <option value="atk">공격 강화</option>
+                                    <option value="def">방어 강화</option>
+                                    <option value="origin">근원 강화</option>
+                                    <option value="mana">마력 강화</option>
+                                    <option value="revive">소생</option>
+                                    <option value="custom">직접 입력 (하우스 룰 등)</option>
+                                </select>
+
+                                <!-- 2. 효과 설명 보여주는 박스 (평소엔 여기 뜸) -->
+                                <div id="effect-description" class="info-box">
+                                    진정한 모습의 효과를 선택하면 여기에 설명이 나타납니다.
                                 </div>
 
-                                <!-- 2. 진정한 모습 효과 (플로팅 적용!) -->
-
+                                <!-- 3. 직접 입력용 텍스트 영역 (평소엔 숨김) -->
+                                <textarea 
+                                    name="true_form_effect_custom" 
+                                    id="true_form_effect_custom" 
+                                    class="simple-textarea" 
+                                    style="display: none;" 
+                                    placeholder="효과를 직접 입력하세요."></textarea>
+                                    
+                                <!-- 실제 DB로 넘어갈 값 (JS가 채워줌) -->
+                                <input type="hidden" name="true_form_effect" id="true_form_effect">
                             </div>
                         </div>
+                        <!-- [오른쪽] 주권 영역 -->
+                        <div class="profile-right">
+                            <!-- 주권 이미지 -->
+                            <div class="compact-field center-align">
+                                <label>주권 (영역)</label>
+                                <div class="image-upload-area size-wide" data-target="sovereignty_image">
+                                    <div class="upload-placeholder">
+                                        <span class="upload-icon">👑</span>
+                                        <p>이미지 업로드</p>
+                                    </div>
+                                    <img class="preview-image" style="display: none;">
+                                    <input type="file" class="file-input" accept="image/*" style="display: none;">
+                                </div>
+                            </div>
+                            <!-- 클래스 재사용: backstory-group -> floating-textarea-group 으로 이름만 바꿔서 공통화 추천 -->
+                            <div class="compact-field textarea-group">
+                                <label>주권 묘사</label>
+                                <textarea name="sovereignty_desc" id="sovereignty_desc" placeholder="주권의 형태와 연출을 묘사하세요."></textarea>
+                            </div>
+
+                            <!-- 3. 주권 BGM -->
+                            <div class="compact-field">
+                                <label>주권 BGM URL</label>
+                                <input type="text" name="sovereignty_bgm" id="sovereignty_bgm" placeholder="Youtube 또는 MP3 링크">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
 

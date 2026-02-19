@@ -83,9 +83,12 @@ function openCropModal(file, area, preview, placeholder, hiddenInput) {
         if (currentCropper) {
             currentCropper.destroy();
         }
+
+        const targetId = area.dataset.target;
+        const aspectRatio = (targetId === 'sovereignty_image') ? 16 / 9 : 1; // 주권 이미지는 16:9, 나머지는 1:1
         
         currentCropper = new Cropper(cropImage, {
-            aspectRatio: 1, // 1:1 비율 고정
+            aspectRatio: aspectRatio,
             viewMode: 2,
             autoCropArea: 1,
             responsive: true,
@@ -128,9 +131,10 @@ function confirmCrop() {
     if (!currentCropper || !currentTargetArea) return;
     
     // 크롭된 이미지를 Canvas로 변환
+    const isSovereignty = currentTargetArea?.area?.dataset?.target === 'sovereignty_image';
     const canvas = currentCropper.getCroppedCanvas({
-        width: 512,  // 최종 이미지 크기
-        height: 512,
+        width: isSovereignty ? 960 : 512,  // 주권 이미지는 1024, 나머지는 512
+        height: isSovereignty ? 540 : 512,  // 주권 이미지는 16:9, 나머지는 1:1
         imageSmoothingEnabled: true,
         imageSmoothingQuality: 'high',
     });
