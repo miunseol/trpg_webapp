@@ -53,8 +53,8 @@ $field_names = [1 => "별", 2 => "짐승", 3 => "힘", 4 => "노래", 5 => "꿈"
                     <div class="card-body">
                         <div class="strong-info">
                             <span class="label">전문 분야</span>
-                            <span class="strong-badge field-<?php echo $char['strong_field']; ?>">
-                                <?php echo $field_names[$char['strong_field']]; ?>
+                            <span class="strong-badge field-<?php echo $char['specialty_field']; ?>">
+                                <?php echo $field_names[$char['specialty_field']]; ?>
                             </span>
                         </div>
                         <div class="skill-count">

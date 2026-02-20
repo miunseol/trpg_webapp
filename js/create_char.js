@@ -2,15 +2,10 @@
  * create_char.js
  * 캐릭터 생성 폼 로직
  */
-
-let selectedSkills = [];
-let selectedSpecialty = null;
-const MAX_SKILLS = 6;
 const OUTSIDER_ARCHETYPE_ID = 5; // 이단자 경력 ID
 
 document.addEventListener('DOMContentLoaded', () => {
     initFormEvents();
-    initSkillSelection();
     initGenderCustomInput();
     initMemoFloating();
     initAncestryPeerageToggle();
@@ -110,54 +105,6 @@ function initAncestryPeerageToggle() {
 
 /* 폼 이벤트 초기화 */
 function initFormEvents() {
-    // 성별 선택 시 직접입력 표시
-    document.getElementById('gender').addEventListener('change', function() {
-        const customInput = document.getElementById('gender-custom-input');
-        if (this.value === 'custom') {
-            customInput.classList.add('show')
-        } else {
-            customInput.classList.remove('show')
-            document.getElementById('gender_custom').value = '' ;
-        }
-    });
-}
-
-/* 특기 선택 초기화 */
-function initSkillSelection() {
-    // 전문 분야 선택
-    const categories = document.querySelectorAll('.cat');
-    categories.forEach(cat => {
-        cat.addEventListener('click', function() {
-            const fieldId = parseInt(this.dataset.field);
-            
-            document.querySelectorAll('.cat').forEach(c => c.classList.remove('specialty'));
-            this.classList.add('specialty');
-            
-            selectedSpecialty = fieldId;
-        });
-    });
-
-    // 특기 선택
-    const skillCells = document.querySelectorAll('.skill-cell');
-    skillCells.forEach(cell => {
-        cell.addEventListener('click', function() {
-            const skillId = parseInt(this.dataset.id);
-            
-            if (this.classList.contains('owned')) {
-                this.classList.remove('owned');
-                selectedSkills = selectedSkills.filter(id => id !== skillId);
-            } else {
-                if (selectedSkills.length >= MAX_SKILLS) {
-                    showError(`최대 ${MAX_SKILLS}개의 특기만 선택할 수 있습니다.`);
-                    return;
-                }
-                this.classList.add('owned');
-                selectedSkills.push(skillId);
-            }
-            
-            updateSkillCount();
-        });
-    });
 }
 
 /* 성별 직접입력 토글 초기화 */
@@ -183,11 +130,6 @@ function initGenderCustomInput() {
     
     // 초기 로드 시 상태 반영 (수정 페이지 등을 위해)
     updateGenderCustom();
-}
-
-/* 특기 카운트 업데이트 */
-function updateSkillCount() {
-    document.getElementById('skill-count').textContent = selectedSkills.length;
 }
 
 /* 백스토리 자동 높이 조절 & 플로팅 */
@@ -273,19 +215,28 @@ function validateAndSubmit() {
         }
     }
     
-    if (!selectedStrong) {
+    if (!currentSpecialty) {
         showError('전문 분야를 선택해주세요. (상단 카테고리 클릭)');
         return;
     }
     
-    if (selectedSkills.length !== MAX_SKILLS) {
-        showError(`초기 특기를 정확히 ${MAX_SKILLS}개 선택해주세요. (현재: ${selectedSkills.length}개)`);
+    if (ownedSkillIds.length !== SHEET_CONFIG.maxSkills) {
+        showError(`특기를 정확히 ${SHEET_CONFIG.maxSkills}개 선택해주세요.`);
+        return;
+    }
+
+    // 전문 분야 내 2개 이상 검증 (신규)
+    const specialtySkillCount = ownedSkillIds.filter(id => {
+        return Math.floor(id / 100) === currentSpecialty;
+    }).length;
+    if (specialtySkillCount < 2) {
+        showError('전문 분야 내에서 2개 이상의 특기를 선택해야 합니다.');
         return;
     }
     
     // 폼 데이터 설정
-    document.getElementById('strong_field').value = selectedSpecialty;
-    document.getElementById('skills').value = JSON.stringify(selectedSkills);
+    document.getElementById('specialty_field').value = currentSpecialty;
+    document.getElementById('skills').value = JSON.stringify(ownedSkillIds);
     
     // 폼 제출
     document.getElementById('create-char-form').submit();

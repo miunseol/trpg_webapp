@@ -5,7 +5,7 @@ SHOW FULL COLUMNS FROM character_sheets;
 id	int(11)	NULL	NO	PRI	NULL	auto_increment	select,insert,update,references		
 name	varchar(100)	utf8mb4_general_ci	NO		NULL		select,insert,update,references		
 rule_system	varchar(50)	utf8mb4_general_ci	NO		MagicaLogia		select,insert,update,references		
-strong_field	int(11)	NULL	NO		1		select,insert,update,references	전문 분야 (1~6)	
+specialty_field	int(11)	NULL	NO		1		select,insert,update,references	전문 분야 (1~6)	
 skills	text	utf8mb4_general_ci	YES		NULL		select,insert,update,references	JSON 배열	
 magic_power_current	int(11)	NULL	NO		4		select,insert,update,references	현재 마력	
 magic_power_max	int(11)	NULL	NO		4		select,insert,update,references	최대 마력	

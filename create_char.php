@@ -2,14 +2,6 @@
 session_start();
 $conn = mysqli_connect("localhost", "root", "", "trpg_db");
 
-// 전체 특기 이름 목록 가져오기
-$skill_master_sql = "SELECT * FROM skill_table";
-$master_result = mysqli_query($conn, $skill_master_sql);
-$skill_names = [];
-while($row = mysqli_fetch_assoc($master_result)) {
-    $skill_names[$row['skill_id']] = $row['skill_name'];
-}
-
 // 경력 목록 가져오기
 $archetypes_sql = "SELECT * FROM archetypes ORDER BY id";
 $archetypes_result = mysqli_query($conn, $archetypes_sql);
@@ -229,79 +221,77 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                 </div>
 
                 <!-- 캐릭터 데이터 정보 섹션 -->
+                <h3>🧙‍♂️ 캐릭터 데이터 정보</h3>
                 <div class="form-section">
-                    <h3>🧙‍♂️ 캐릭터 데이터 정보</h3>
+                    <div class="data-layout">
+                        <!-- 스탯 입력 필드 그룹 -->
+                        <div class="data-left">
+                            <!-- 스탯 원형 입력 필드 -->
+                            <div class="magic-circle-container">
+                                <svg class="magic-ring" viewBox="0 0 200 200">
+                                    <defs>
+                                        <!-- 룬 문자 경로 정의 (원형 텍스트용) -->
+                                        <path id="textCircle" d="M 20,100 A 80,80 0 1,1 180,100 A 80,80 0 1,1 20,100" fill="none" />
+                                        <!-- 그라데이션 효과 -->
+                                        <radialGradient id="magicGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                            <stop offset="0%" stop-color="#f1c40f" stop-opacity="0.3" />
+                                            <stop offset="100%" stop-color="#f1c40f" stop-opacity="0" />
+                                        </radialGradient>
+                                    </defs>
 
-                    <!-- 스탯 입력 필드 그룹 -->
-                    <div class="profile-layout">
-                        <!-- 스탯 원형 입력 필드 -->
-                        <div class="magic-circle-container">
-                            <svg class="magic-ring" viewBox="0 0 200 200">
-                                <defs>
-                                    <!-- 룬 문자 경로 정의 (원형 텍스트용) -->
-                                    <path id="textCircle" d="M 20,100 A 80,80 0 1,1 180,100 A 80,80 0 1,1 20,100" fill="none" />
-                                    <!-- 그라데이션 효과 -->
-                                    <radialGradient id="magicGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                                        <stop offset="0%" stop-color="#f1c40f" stop-opacity="0.3" />
-                                        <stop offset="100%" stop-color="#f1c40f" stop-opacity="0" />
-                                    </radialGradient>
-                                </defs>
+                                    <!-- 1. 배경: 은은한 광원 -->
+                                    <circle cx="100" cy="100" r="60" fill="url(#magicGlow)" />
 
-                                <!-- 1. 배경: 은은한 광원 -->
-                                <circle cx="100" cy="100" r="60" fill="url(#magicGlow)" />
+                                    <!-- 2. 레이어 1: 육망성 (시계 방향 회전) -->
+                                    <g class="spin-slow">
+                                        <polygon points="100,20 170,140 30,140" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
+                                        <polygon points="100,180 30,60 170,60" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
+                                        <circle cx="100" cy="100" r="85" fill="none" stroke="#667eea" stroke-width="1" stroke-dasharray="2, 4" opacity="0.3" />
+                                    </g>
 
-                                <!-- 2. 레이어 1: 육망성 (시계 방향 회전) -->
-                                <g class="spin-slow">
-                                    <polygon points="100,20 170,140 30,140" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
-                                    <polygon points="100,180 30,60 170,60" fill="none" stroke="#667eea" stroke-width="1" opacity="0.4" />
-                                    <circle cx="100" cy="100" r="85" fill="none" stroke="#667eea" stroke-width="1" stroke-dasharray="2, 4" opacity="0.3" />
-                                </g>
+                                    <!-- 3. 레이어 2: 룬 문자 링 (반시계 방향 회전) -->
+                                    <g class="spin-reverse">
+                                        <circle cx="100" cy="100" r="92" fill="none" stroke="#667eea" stroke-width="1" opacity="0.6"/>
+                                        <text fill="#667eea" font-size="10" font-family="monospace" letter-spacing="3" opacity="0.8">
+                                            <textPath href="#textCircle" startOffset="0%">
+                                                EGO ET TU • FABULA QUAE TRAGOEDIAM PERDIT • MAGIA • LOGIA • VERITAS • UMBRA • LUX •
+                                            </textPath>
+                                        </text>
+                                    </g>
 
-                                <!-- 3. 레이어 2: 룬 문자 링 (반시계 방향 회전) -->
-                                <g class="spin-reverse">
-                                    <circle cx="100" cy="100" r="92" fill="none" stroke="#667eea" stroke-width="1" opacity="0.6"/>
-                                    <text fill="#667eea" font-size="10" font-family="monospace" letter-spacing="3" opacity="0.8">
-                                        <textPath href="#textCircle" startOffset="0%">
-                                            EGO ET TU • FABULA QUAE TRAGOEDIAM PERDIT • MAGIA • LOGIA • VERITAS • UMBRA • LUX •
-                                        </textPath>
-                                    </text>
-                                </g>
+                                    <!-- 4. 레이어 3: 스탯 연결 역삼각형 (고정 - 입력칸이랑 위치 맞춰야 하니까) -->
+                                    <g class="static-frame">
+                                        <!-- 메인 역삼각형 -->
+                                        <polygon points="33,60 167,60 100,177" fill="none" stroke="#f1c40f" stroke-width="2" filter="drop-shadow(0 0 2px #f1c40f)" />
+                                        <!-- 장식용 작은 원들 (꼭지점) -->
+                                        <circle cx="33" cy="60" r="3" fill="#f1c40f" />
+                                        <circle cx="167" cy="60" r="3" fill="#f1c40f" />
+                                        <circle cx="100" cy="177" r="3" fill="#f1c40f" />
+                                    </g>
 
-                                <!-- 4. 레이어 3: 스탯 연결 역삼각형 (고정 - 입력칸이랑 위치 맞춰야 하니까) -->
-                                <g class="static-frame">
-                                    <!-- 메인 역삼각형 -->
-                                    <polygon points="33,60 167,60 100,177" fill="none" stroke="#f1c40f" stroke-width="2" filter="drop-shadow(0 0 2px #f1c40f)" />
-                                    <!-- 장식용 작은 원들 (꼭지점) -->
-                                    <circle cx="33" cy="60" r="3" fill="#f1c40f" />
-                                    <circle cx="167" cy="60" r="3" fill="#f1c40f" />
-                                    <circle cx="100" cy="177" r="3" fill="#f1c40f" />
-                                </g>
+                                    <!-- 5. 중앙 장식 (계제) -->
+                                    <circle cx="100" cy="100" r="30" fill="rgba(26, 28, 35, 0.9)" stroke="#f1c40f" stroke-width="1.5" />
+                                    <circle cx="100" cy="100" r="26" fill="none" stroke="#667eea" stroke-width="1" opacity="0.5" />
+                                </svg>
 
-                                <!-- 5. 중앙 장식 (계제) -->
-                                <circle cx="100" cy="100" r="30" fill="rgba(26, 28, 35, 0.9)" stroke="#f1c40f" stroke-width="1.5" />
-                                <circle cx="100" cy="100" r="26" fill="none" stroke="#667eea" stroke-width="1" opacity="0.5" />
-                            </svg>
-
-                            <!-- 입력 필드 (해솔이 잡은 위치 그대로!) -->
-                            <div class="stat-input-group center">
-                                <label>계제</label>
-                                <input type="number" name="tier" id="tier" min="0" max="7" value="3" class="hex-input" required>
+                                <!-- 입력 필드 (해솔이 잡은 위치 그대로!) -->
+                                <div class="stat-input-group center">
+                                    <label>계제</label>
+                                    <input type="number" name="tier" id="tier" min="0" max="7" value="3" class="hex-input" required>
+                                </div>
+                                <div class="stat-input-group top-left">
+                                    <label>공격</label>
+                                    <input type="number" name="attack_point" id="attack_point" min="0" max="7" value="3" class="circle-input" required>
+                                </div>
+                                <div class="stat-input-group top-right">
+                                    <label>방어</label>
+                                    <input type="number" name="defense_point" id="defense_point" min="0" max="7" value="3" class="circle-input" required>
+                                </div>
+                                <div class="stat-input-group bottom">
+                                    <label>근원</label>
+                                    <input type="number" name="principal_point" id="principal_point" min="0" max="7" value="3" class="circle-input" required>
+                                </div>
                             </div>
-                            <div class="stat-input-group top-left">
-                                <label>공격</label>
-                                <input type="number" name="attack_point" id="attack_point" min="0" max="7" value="3" class="circle-input" required>
-                            </div>
-                            <div class="stat-input-group top-right">
-                                <label>방어</label>
-                                <input type="number" name="defense_point" id="defense_point" min="0" max="7" value="3" class="circle-input" required>
-                            </div>
-                            <div class="stat-input-group bottom">
-                                <label>근원</label>
-                                <input type="number" name="principal_point" id="principal_point" min="0" max="7" value="3" class="circle-input" required>
-                            </div>
-                        </div>
-                        <!-- 마법사 데이터 필드 -->
-                        <div class="compact-row">
                             <!--공적점 및 마화 입력 필드 -->
                             <div class="compact-column">
                                 <div class="compact-field">
@@ -336,15 +326,32 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="compact-column">
-                                <div class="compact-field">
-                                    <label>특기사항</label>
-                                    <input type="text" name="special_notes" id="special_notes" placeholder="특기사항을 입력하세요">
-                                </div>
+                        </div>
+                        <!-- 앵커 및 혼의 특기 그룹 -->
+                        <div class="data-right">
+                            <!-- 앵커 입력 필드 -->
+                            <label class="section-label">앵커</label>
+                            <div class="anchor-grid">
+                                <?php for ($i = 1; $i <= 10; $i++): ?>
+                                    <div class="anchor-item">
+                                        <input 
+                                            type="text" 
+                                            name="anchor_<?php echo $i; ?>" 
+                                            id="anchor_<?php echo $i; ?>"
+                                            placeholder="앵커 <?php echo $i; ?>">
+                                    </div>
+                                <?php endfor; ?>
+                            </div>
+                            <!-- 혼의 특기 입력 필드 -->
+                            <div class="compact-field">
+                                <label class="section-label">혼의 특기</label>
+                                <input type="text" name="soul_skill" id="soul_skill" placeholder="혼의 특기 이름을 입력하세요">
+                            </div>
+                            <div class="compact-field textarea-group">
+                                <textarea name="soul_skill_desc" id="soul_skill_desc" placeholder="어떠한 시각으로 세상을 바라보는지 서술하세요"></textarea>
                             </div>
                         </div>
                     </div>
-
                     <!-- 진정한 모습 & 주권 섹션 -->
                     <h3>✨ 진정한 모습 & 주권</h3>
                     <div class="profile-layout magic-section">
@@ -366,7 +373,7 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 <label>진정한 모습 이름</label>
                                 <input type="text" name="true_form_name" id="true_form_name" placeholder="예: 불타는 날개, 심연의 눈">
                             </div>
-
+    
                             <!-- 진정한 모습 효과 -->
                                 <div class="form-group">
                                 <label>진정한 모습 효과</label>
@@ -381,12 +388,12 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                     <option value="revive">소생</option>
                                     <option value="custom">직접 입력 (하우스 룰 등)</option>
                                 </select>
-
+    
                                 <!-- 2. 효과 설명 보여주는 박스 (평소엔 여기 뜸) -->
                                 <div id="effect-description" class="info-box">
                                     진정한 모습의 효과를 선택하면 여기에 설명이 나타납니다.
                                 </div>
-
+    
                                 <!-- 3. 직접 입력용 텍스트 영역 (평소엔 숨김) -->
                                 <textarea 
                                     name="true_form_effect_custom" 
@@ -418,7 +425,7 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                                 <label>주권 묘사</label>
                                 <textarea name="sovereignty_desc" id="sovereignty_desc" placeholder="주권의 형태와 연출을 묘사하세요."></textarea>
                             </div>
-
+    
                             <!-- 3. 주권 BGM -->
                             <div class="compact-field">
                                 <label>주권 BGM URL</label>
@@ -427,58 +434,18 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
                         </div>
                     </div>
                 </div>
-
-
                 <input type="hidden" name="specialty_field" id="specialty_field" value="">
                 <input type="hidden" name="skills" id="skills" value="[]">
             </form>
         </div>
 
-        <div class="skill-limit-notice">
-            <strong>전문 분야 선택:</strong> 상단 카테고리(별/짐승/힘/노래/꿈/어둠)를 클릭하세요<br>
-            <strong>초기 특기 선택:</strong> 특기 칸을 클릭하여 6개를 선택하세요 (<span id="skill-count">0</span>/6)
-        </div>
-
-        <svg id="mana-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;">
-            <path id="mana-line" d="" stroke="#f1c40f" stroke-width="2" fill="none" stroke-dasharray="5,5" />
-        </svg>
-
-        <div class="skill-table-section">
-            <div class="grid-header">
-                <div class="dice-label">2D6</div>
-                <?php
-                $categories = ["별", "짐승", "힘", "노래", "꿈", "어둠"];
-                foreach ($categories as $index => $cat_name) {
-                    $field_id = $index + 1;
-                    echo "<div class='cat' data-field='$field_id'>$cat_name</div>";
-                    if ($index < 5) echo "<div class='gap'></div>";
-                }
-                ?>
-            </div>
-
-            <?php
-            for ($y = 2; $y <= 12; $y++) {
-                echo "<div class='grid-row'>";
-                echo "<div class='dice-num'>$y</div>";
-                
-                for ($x = 1; $x <= 11; $x++) {
-                    if ($x % 2 != 0) {
-                        $col_idx = ($x + 1) / 2;
-                        $skill_id = $col_idx * 100 + $y;
-                        $name = $skill_names[$skill_id] ?? $skill_id;
-                        
-                        echo "<div class='skill-cell' 
-                                   data-x='$x' data-y='$y' 
-                                   data-id='$skill_id' 
-                                   id='skill-$skill_id'>$name</div>";
-                    } else {
-                        echo "<div class='gap-cell' data-x='$x' data-y='$y'></div>";
-                    }
-                }
-                echo "</div>";
-            }
-            ?>
-        </div>
+        <?php
+        include 'includes/skill_data.php';
+        $table_mode = 'create';
+        $my_skills = []; // 아직 특기를 선택하지 않았으므로 빈 배열
+        $specialty_field = ''; // 아직 강한 분야를 선택하지 않았으므로 빈 문자열
+        include 'includes/skill_table.php';
+        ?>
 
         <div class="create-form">
             <p class="error-message" id="error-message"></p>
@@ -486,6 +453,13 @@ while($row = mysqli_fetch_assoc($peerages_result)) {
         </div>
     </div>
 
+    <script>
+        const SHEET_CONFIG = {
+            mode: 'create',
+            maxSkills: 5  // 마기카로기아 초기 특기 수
+        };
+    </script>
+    <script src="js/interaction.js"></script>
     <script src="js/image-upload.js"></script>
     <script src="js/create_char.js"></script>
 </body>

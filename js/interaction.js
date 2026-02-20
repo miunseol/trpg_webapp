@@ -1,41 +1,53 @@
-/**
- * [기능 1] 초기 데이터 설정
- */
 let ownedSkillIds = [];
-let currentSpecialty;
-let specialtyFieldX;
+let currentSpecialty = null;
+let specialtyFieldX = null;
 let isPreparingRoll = false;
 const hasCircle = false;
 const hasDictionary = false;
 
+// 모드 시스템 — SHEET_CONFIG에서 읽어옴
+let MODE = 'sheet';           // 기본값
+let MAX_SKILLS = 5;           // 마기카로기아 기본 특기 수
+
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. PHP 데이터 로드
+    // 1. 모드 & 설정 로드
     if (typeof SHEET_CONFIG !== 'undefined') {
-        charId = SHEET_CONFIG.charId;
-        currentSpecialty = SHEET_CONFIG.initialSpecialty;
-        specialtyFieldX = (currentSpecialty * 2) - 1;
-        ownedSkillIds = SHEET_CONFIG.initialSkills;
+        MODE = SHEET_CONFIG.mode || 'sheet';
+        MAX_SKILLS = SHEET_CONFIG.maxSkills || 5;
+
+        if (MODE === 'sheet') {
+            charId = SHEET_CONFIG.charId;
+            currentSpecialty = SHEET_CONFIG.initialSpecialty;
+            specialtyFieldX = (currentSpecialty * 2) - 1;
+            ownedSkillIds = SHEET_CONFIG.initialSkills || [];
+        }
+        // create 모드에서는 빈 상태로 시작
     }
 
-    // 2. 브라우저 기본 기능 차단
+    // 2. 브라우저 기본 기능 차단 (양쪽 공통)
     document.addEventListener('contextmenu', (e) => {
         if (e.target.closest('.sheet-container')) e.preventDefault();
     }, false);
     document.addEventListener('dragstart', (e) => e.preventDefault());
 
-    // 3. 특기 칸 이벤트 등록
+    // 3. 특기 칸 이벤트 등록 (양쪽 공통)
     const skillCells = document.querySelectorAll('.skill-cell');
     skillCells.forEach(cell => {
         cell.addEventListener('mouseenter', handleMouseEnter);
         cell.addEventListener('mouseleave', handleMouseLeave);
         cell.addEventListener('click', handleCellClick);
-        cell.addEventListener('mousedown', handleMouseDown);
-        cell.addEventListener('mouseup', handleMouseUp);
+
+        // 주사위 굴림 이벤트는 sheet 모드에서만
+        if (MODE === 'sheet') {
+            cell.addEventListener('mousedown', handleMouseDown);
+            cell.addEventListener('mouseup', handleMouseUp);
+        }
     });
 
-    // 4. 전문 분야 초기화
+    // 4. 전문 분야 이벤트 (양쪽 공통)
     initSpecialtyEvents();
-    console.log("[시스템] 캐릭터 데이터 로드 완료:", specialtyFieldX);
+
+    console.log(`[시스템] 모드: ${MODE}, 초기화 완료`);
 });
 
 /**
@@ -85,75 +97,89 @@ function getNearestSkillInfo(targetX, targetY) {
  */
 function initSpecialtyEvents() {
     const categories = document.querySelectorAll('.cat');
-    
     categories.forEach(cat => {
         cat.addEventListener('click', function() {
-            if (document.getElementById('lock-switch').checked) return;
+            // sheet 모드에서는 전문 분야 변경 비활성화 (판정만)
+            if (MODE === 'sheet') return;
+
             const fieldId = parseInt(this.dataset.field);
-            updateSpecialty(fieldId, this.innerText);
+            
+            // 공통: 시각적 업데이트
+            document.querySelectorAll('.cat').forEach(c => c.classList.remove('specialty'));
+            this.classList.add('specialty');
+            
+            currentSpecialty = fieldId;
+            specialtyFieldX = (fieldId * 2) - 1;
+
+            if (MODE === 'create') {
+                // hidden input 업데이트 (폼 제출용)
+                const hiddenField = document.getElementById('specialty_field');
+                if (hiddenField) hiddenField.value = fieldId;
+            }
+            // sheet 모드에서 AJAX 저장은 더 이상 불필요
         });
     });
-}
-
-function updateSpecialty(fieldId, fieldName) {
-    currentSpecialty = fieldId;
-    specialtyFieldX = (fieldId * 2) - 1;
-
-    document.querySelectorAll('.cat').forEach(c => c.classList.remove('specialty'));
-    const targetCat = document.querySelector(`.cat[data-field="${fieldId}"]`);
-    if (targetCat) targetCat.classList.add('specialty');
-
-    saveSpecialtyToServer(fieldId);
-    console.log(`[시스템] 전문 분야 변경: ${fieldName} (X좌표: ${specialtyFieldX})`);
-}
-
-function saveSpecialtyToServer(fieldId) {
-    const data = new URLSearchParams();
-    data.append('char_id', SHEET_CONFIG.charId);
-    data.append('field_id', fieldId);
-
-    fetch('update_specialty.php', {
-        method: 'POST',
-        body: data
-    })
-    .then(res => res.json())
-    .then(result => console.log("전문 분야 저장:", result.message))
-    .catch(err => console.error("저장 실패:", err));
 }
 
 /**
  * [기능 4] 특기 습득/해제
  */
 function handleCellClick(e) {
-    const lockSwitch = document.getElementById('lock-switch');
-    if (lockSwitch && lockSwitch.checked) return;
+    if (MODE === 'create') {
+        handleCreateClick(e);
+    } else if (MODE === 'sheet') {
+        handleSheetClick(e);
+    }
+}
 
+// ===== CREATE 모드: 특기 선택/해제 (5개 제한, 서버 저장 없음) =====
+function handleCreateClick(e) {
     const cell = e.currentTarget;
     const skillId = parseInt(cell.dataset.id);
 
     if (cell.classList.contains('owned')) {
+        // 해제
         cell.classList.remove('owned');
         ownedSkillIds = ownedSkillIds.filter(id => id !== skillId);
     } else {
+        // 선택
+        if (ownedSkillIds.length >= MAX_SKILLS) {
+            showCreateError(`최대 ${MAX_SKILLS}개의 특기만 선택 가능`);
+            return;
+        }
         cell.classList.add('owned');
         ownedSkillIds.push(skillId);
     }
-    
-    saveSkillsToServer();
+
+    updateSkillCount();
+    // hidden input 업데이트 (폼 제출용)
+    document.getElementById('skills').value = JSON.stringify(ownedSkillIds);
 }
 
-function saveSkillsToServer() {
-    const data = new URLSearchParams();
-    data.append('char_id', SHEET_CONFIG.charId);
-    data.append('skills', JSON.stringify(ownedSkillIds));
-    
-    fetch('update_skills.php', {
-        method: 'POST',
-        body: data
-    })
-    .then(res => res.json())
-    .then(result => console.log("특기 저장:", result.message))
-    .catch(err => console.error("저장 실패:", err));
+// ===== SHEET 모드: 판정만 (편집 기능 제거) =====
+function handleSheetClick(e) {
+    // 시트에서는 클릭 = 판정 (잠금 ON 상태에서만)
+    const lockSwitch = document.getElementById('lock-switch');
+    if (!lockSwitch || !lockSwitch.checked) return;
+
+    // 판정 로직은 handleMouseDown/Up에서 처리하므로
+    // 여기서는 아무것도 안 해도 됨
+    // (혹시 단순 클릭 판정을 원하면 여기에 추가)
+}
+
+function updateSkillCount() {
+    const countEl = document.getElementById('skill-count');
+    if (countEl) {
+        countEl.textContent = ownedSkillIds.length;
+    }
+}
+
+function showCreateError(message) {
+    const errorEl = document.getElementById('error-message');
+    if (!errorEl) return;
+    errorEl.textContent = message;
+    errorEl.style.display = 'block';
+    setTimeout(() => { errorEl.style.display = 'none'; }, 3000);
 }
 
 /**

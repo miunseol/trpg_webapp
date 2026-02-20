@@ -46,6 +46,58 @@
     height: 100%;
 }
 
+.data-layout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.data-left{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 앵커 그리드: 2열 × 5행 */
+.anchor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.anchor-item input {
+    width: 100%;
+    height: 34px;
+    padding: 8px;
+    background: #1a1c23;
+    border: 1px solid #3d4150;
+    border-radius: 4px;
+    color: #e0e0e0;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+/* 좁은 너비: 스탯/공적마화 나란히, 앵커 아래로 */
+@media (max-width: 900px) {
+    .data-layout {
+        grid-template-columns: 1fr; /* 1컬럼 */
+    }
+
+    /* 윗줄: 스탯(좌) + 공적마화(우) */
+    .data-left {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 아랫줄: 앵커 전체 너비 */
+    .data-right {
+        width: 100%;
+    }
+}
+
 /* ===== 콤팩트 ===== */
 .compact-row {
     display: flex;
@@ -350,6 +402,11 @@ input[type="number"] {
     font-size: 12px;
     color: #ccc;
     text-shadow: 0 0 4px #000;
+}
+
+/* ===== 특수 입력 필드 스타일 : 공적점 및 마화 필드 ===== */
+.data-layout > .data-left > .compact-field{
+    justify-content: space-around;
 }
 
 /* ===== 이미지 업로드 영역 ===== */
